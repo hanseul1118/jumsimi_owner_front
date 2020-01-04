@@ -2,7 +2,7 @@ import Vue from "vue"
 
 // 모듈
 import Router from "vue-router"
-// import { store } from "./store/store"
+// import { store } from "./store/store" 
 
 // 화면
 import RestaurantList from "@/pages/RestaurantList.vue"
