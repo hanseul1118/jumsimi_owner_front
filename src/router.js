@@ -12,6 +12,7 @@ import MenuDetail from "@/pages/MenuDetail.vue"
 import MenuUpdate from "@/pages/MenuUpdate.vue"
 import Login from "@/pages/Login.vue"
 import CS from "@/pages/common/CS.vue"
+import testmhs from "@/pages/testmhs.vue"
 
 // import api from "@/api/api.js"
 Vue.use(Router)
@@ -53,6 +54,12 @@ const router = new Router({
             path: "/cs",
             name: "CS",
             component: CS
+        },
+        // 테스트용
+        { 
+            path: "/hs",
+            name: "hs",
+            component: testmhs
         },
     ]
 })
