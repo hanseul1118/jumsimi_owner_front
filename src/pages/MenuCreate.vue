@@ -1,15 +1,12 @@
 <template>
-    <div>
-
-    </div>
+  <div class="menu-create-container"></div>
 </template>
 
 <script>
-    export default {
-        
-    }
+export default {};
 </script>
 
 <style lang="scss" scoped>
-
+.menu-create-container {
+}
 </style>
