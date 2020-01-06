@@ -1,6 +1,6 @@
 <template>
     <div class="header-basic-container">
-        <div class="back-btn">뒤로</div>
+        <div class="back-btn" @click="goBack()">뒤로</div>
         <div class="header-txt">
             점심이
         </div>
@@ -9,7 +9,11 @@
 
 <script>
     export default {
-        
+        methods:{
+            goBack(){
+                history.go(-1);
+            }
+        }
     }
 </script>
 
@@ -21,6 +25,7 @@
             position: absolute;
             top: 0px;
             left: 4px;
+            cursor: pointer;
         }
         .header-txt{
             text-align: center;
