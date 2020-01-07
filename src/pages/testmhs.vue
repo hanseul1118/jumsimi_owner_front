@@ -1,14 +1,14 @@
 <template>
     <div>
-        <header-basic></header-basic>
+        <header-menu></header-menu>
     </div>
 </template>
 
 <script>
-    import headerBasic from '@/components/headerBasic.vue'
+    import headerMenu from '@/components/headerMenu.vue'
     export default {
         components:{
-            headerBasic
+            headerMenu
         }
     }
 </script>
