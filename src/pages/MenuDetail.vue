@@ -1,15 +1,20 @@
 <template>
-    <div>
-
-    </div>
+  <div class="menu-detail-container">
+      <header-back></header-back>
+  </div>
 </template>
 
 <script>
-    export default {
-        
+import HeaderBack from '@/components/headerBack'
+
+export default {
+    components:{
+        HeaderBack
     }
+}
 </script>
 
 <style lang="scss" scoped>
-
+.menu-create-container {
+}
 </style>
