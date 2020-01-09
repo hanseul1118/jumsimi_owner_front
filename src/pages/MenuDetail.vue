@@ -1,15 +1,15 @@
 <template>
   <div class="menu-detail-container">
-      <header-back></header-back>
+      <header-bar></header-bar>
   </div>
 </template>
 
 <script>
-import HeaderBack from '@/components/headerBack'
+import HeaderBar from '@/components/headerBar'
 
 export default {
     components:{
-        HeaderBack
+        HeaderBar
     }
 }
 </script>

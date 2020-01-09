@@ -1,6 +1,6 @@
 <template>
     <div class="restaurant-list-container">
-        <header-menu></header-menu>
+        <header-bar :type="2"></header-bar>
         <div class="restaurant-list-body">
             <div v-for="(item, index) in restaurantList" class="restaurant-list-card" :key="index">
                 <div class="card-left">
@@ -26,10 +26,10 @@
 </template>
 
 <script>
-    import HeaderMenu from '../components/headerMenu'
+    import HeaderBar from '../components/headerBar'
     export default {
         components : {
-            HeaderMenu
+            HeaderBar
         },   
         data(){
             return{
