@@ -1,14 +1,14 @@
 <template>
     <div>
-        <header-menu></header-menu>
+        <header-bar></header-bar>
     </div>
 </template>
 
 <script>
-    import headerMenu from '@/components/headerMenu.vue'
+    import HeaderBar from '@/components/headerBar.vue'
     export default {
         components:{
-            headerMenu
+            HeaderBar
         }
     }
 </script>

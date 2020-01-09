@@ -1,6 +1,6 @@
 <template>
     <div class="cs-container">
-        <header-back></header-back>
+        <header-bar :type="1"></header-bar>
         <div class="cs-body">
             <div class="sub-title">점심이 고객센터</div>
             <div class="sub-content">점심이에 관한 문의 사항이 있으면<br>아래 연락처로 연락주세요!</div>
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-    import HeaderBack from '@/components/headerBack.vue'
+    import HeaderBar from '@/components/headerBar.vue'
 
     export default {
         data(){
@@ -24,7 +24,7 @@
             }
         },
         components: {
-            HeaderBack
+            HeaderBar
         }
     }
 </script>
