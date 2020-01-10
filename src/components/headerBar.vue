@@ -1,12 +1,15 @@
 <template>
     <div class="header-menu-container">
         <div class="header-top">
-            <div class="back-btn" @click="goBack()" v-show="type==1">뒤로</div>
+            <div class="back-btn" @click="goBack()" v-show="type==1 || type==3">뒤로</div>
             <div class="header-txt">
                 점심이
             </div>
             <div v-show="type==2" class="header-menu-img-container">
                 <img src="@/assets/arrow_down.png" @click="menuClick=!menuClick">
+            </div>
+            <div v-show="type==3" class="header-edit">
+                수정
             </div>
         </div>
         <div v-show="type==2&&menuClick" class="header-menu">
@@ -36,7 +39,8 @@
                 /** 
                  *  0:타이틀
                  *  1:타이틀 + 뒤로가기 버튼
-                 *  2:타이틀 + 메뉴버튼 */
+                 *  2:타이틀 + 메뉴버튼 
+                 *  3:타이틀 + 뒤로가기 + 수정 버튼*/
                 type: Number,
                 default : 0,
                 required : false
@@ -56,6 +60,8 @@
 </script>
 
 <style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css?family=Hi+Melody&display=swap');
+
     .header-menu-container{
         position: relative;
         
@@ -75,6 +81,15 @@
                 line-height: 58px;
                 text-align: center;
                 color: #F65130;
+                font-family: 'Hi Melody', cursive;
+            }
+            .header-edit {
+                position: absolute;
+                top: 17px;
+                left: calc(100% - 50px);
+                cursor: pointer;
+                color:#828282;
+                font-size: 20px;
             }
             .header-menu-img-container{
                 width: 18px;
@@ -110,6 +125,5 @@
             }
 
         }
-        
     }
 </style>
