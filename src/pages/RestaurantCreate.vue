@@ -1,6 +1,6 @@
 <template>
   <div class="restaurant-create-container">
-    <HeaderBar class="header-bar"></HeaderBar>
+    <HeaderBar :type="0" class="header-bar"></HeaderBar>
     <div class="restaurant-create-flex-box">
       <div class="restaurant-create-img">
         <input type="file" accept="image/*" id="image-input" >
@@ -69,15 +69,12 @@
 
 
   .restaurant-create-container {
-    .header-bar {
-      font-family: 'Hi Melody', cursive;
-    }
 
     .restaurant-create-flex-box {
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px 45px;
+      padding: 25px;
       flex-direction: column;
 
       .restaurant-create-img {
