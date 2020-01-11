@@ -67,7 +67,6 @@
 <style lang="scss" scoped>
 @import url('https://fonts.googleapis.com/css?family=Hi+Melody&display=swap');
 
-
   .restaurant-create-container {
 
     .restaurant-create-flex-box {
@@ -101,6 +100,9 @@
         input:first-child {
           margin-top: 10px;
         }
+        input:last-child {
+          margin-bottom: 50px;
+        }
         input {
           margin-bottom: 10px;
           display: block;
@@ -111,6 +113,9 @@
           box-sizing: border-box;
           font-size: 16px;
           color: #707070;
+        }
+        ::placeholder {
+          color: #D0D0D0;
         }
         input:focus {
           outline: none;
