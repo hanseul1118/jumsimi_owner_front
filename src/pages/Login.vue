@@ -5,10 +5,14 @@
         점심이
       </div>
       <div class="login-input-box">
-        <input type="text" :placeholder=idPlaceholder v-model=userId>
-        <input type="password" :placeholder=passwordPlaceholder v-model=userPassword>
+        <input type="text" :placeholder="idPlaceholder" v-model="userId" />
+        <input
+          type="password"
+          :placeholder="passwordPlaceholder"
+          v-model="userPassword"
+        />
       </div>
-      <button class="login-button" @click=login>로그인</button>
+      <button class="login-button" @click="login">로그인</button>
     </div>
   </div>
 </template>
@@ -27,17 +31,17 @@ export default {
     login: function() {
       let userId = this.userId;
       let userPassword = this.userPassword;
-      
-      console.log('userId: ', userId, 'userPassword: ', userPassword);
+
+      console.log("userId: ", userId, "userPassword: ", userPassword);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import url('https://fonts.googleapis.com/css?family=Hi+Melody&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Hi+Melody&display=swap");
 button {
-  font-family: 'Hi Melody', cursive;
+  font-family: "Hi Melody", cursive;
 }
 
 .login-container {
@@ -47,7 +51,7 @@ button {
   position: relative;
   align-items: center;
   justify-content: center;
-  font-family: 'Hi Melody', cursive;
+  font-family: "Hi Melody", cursive;
   .login-flex-box {
     width: calc(100% - 100px);
 
@@ -56,7 +60,7 @@ button {
       margin: 0 auto 170px auto;
       font-size: 55px;
       letter-spacing: -6.02px;
-      color: #CF5252;
+      color: #cf5252;
     }
     .login-input-box {
       input:first-child {
@@ -72,23 +76,27 @@ button {
         font-size: 16px;
         color: #707070;
       }
+      ::placeholder {
+        color: #d0d0d0;
+      }
       input:focus {
         outline: none;
-        color: #F65130;
-        border-bottom: solid 1px #F65130;
+        color: #f65130;
+        border-bottom: solid 1px #f65130;
       }
     }
     .login-button {
       width: 100%;
       height: 58px;
-      background: transparent linear-gradient(114deg, #F65130 0%, #E9941A 100%) 0% 0% no-repeat padding-box;
+      background: transparent linear-gradient(114deg, #f65130 0%, #e9941a 100%)
+        0% 0% no-repeat padding-box;
       border-radius: 13px;
       opacity: 1;
       margin-top: 120px;
       text-align: center;
       font-size: 35px;
       letter-spacing: -3.48px;
-      color: #FFFFFF;
+      color: #ffffff;
     }
   }
 }
