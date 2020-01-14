@@ -43,11 +43,11 @@
                         
                     },
                     {
-                        restaurantName : '깨돌이식당1'
-                        , menuType : '주간1'
-                        , contents : '7,000원' 
+                        restaurantName : '엄마식당'
+                        , menuType : '일간'
+                        , contents : '8,000원' 
                         , lunchOperationTime : '점심시간'
-                        , distance : '10m 이내'
+                        , distance : '20m 이내'
                         
                     }
                 ]
