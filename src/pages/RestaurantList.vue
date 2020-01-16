@@ -2,7 +2,7 @@
     <div class="restaurant-list-container">
         <header-bar :type="2"></header-bar>
         <div class="restaurant-list-body">
-            <div v-for="(item, index) in restaurantList" class="restaurant-list-card" :key="index">
+            <div v-for="(item, index) in restaurantList" class="restaurant-list-card" :key="index" @click="cardClick(item.restaurantId)">
                 <div class="card-left">
                     <!-- <img class="card-like" > -->
                     <img @click="likeClick">
@@ -15,6 +15,7 @@
                     <div class="restaurant-text">
                         {{item.contents}}
                     </div>
+                    <div class="restaurant-price">{{item.price | priceFilter}}</div>
                     <div class="restaurant-bottom">
                         <div class="restaurant-lunch-time">{{item.lunchOperationTime}}</div>
                         <div class="restaurant-distance">{{item.distance}}</div>
@@ -35,22 +36,33 @@
             return{
                 restaurantList : [
                     {
-                        restaurantName : '깨돌이식당'
+                        restaurantId : '1010101010'
+                        , restaurantName : '깨돌이식당'
                         , menuType : '주간'
                         , contents : '7,000원' 
-                        , lunchOperationTime : '점심시간'
+                        , lunchOperationTime : '점심시간 10:30 - 14:30'
                         , distance : '10m 이내'
+                        , price : 0
                         
                     },
                     {
-                        restaurantName : '엄마식당'
+                        restaurantId : '1010101010'
+                        , restaurantName : '엄마식당'
                         , menuType : '일간'
                         , contents : '8,000원' 
-                        , lunchOperationTime : '점심시간'
+                        , lunchOperationTime : '점심시간 10:30 - 14:30'
                         , distance : '20m 이내'
-                        
+                        , price : 0
                     }
                 ]
+            }
+        },
+        filters:{
+            priceFilter(val){
+                let num = new Number(val);
+
+                return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,") + " 원"
+
             }
         },
         methods:{
@@ -58,7 +70,11 @@
                 // console.log('err');
                 alert('hi')
 
+            },
+            cardClick(id){
+                this.$router.push({name: "MenuDetail", params:{restaurantId : id}})
             }
+
         }
     }
 </script>
@@ -71,6 +87,8 @@
         .restaurant-list-card{
             height: 150px;
             clear: both;
+            background-color: #F3F3F3;
+            margin-bottom: 20px;    
 
             .card-left{
                 width: 154px;
@@ -87,7 +105,9 @@
             .card-right{
                 display: inline-block;
                 margin-top: 12px;
-                width: calc(100% - 154px);
+                margin-right: 15px;
+                width: calc(100% - 169px);
+                height: 125px;
 
                 .restaurant-top{
                         display: flex;
@@ -100,7 +120,7 @@
                     }
                     .restaurant-type{
                         width: 40px;
-                        background-color: #CF5252;
+                        background-color: #EF532E;
                         text-align: center;
                         border-radius: 12px;
                         padding: 3px;
@@ -110,7 +130,32 @@
                 }
                 .restaurant-text{
                     clear: both;
-                    margin-top: 17px;
+                    margin-top: 13px;
+                    font-size: 14px;
+                    color: #EF532E;
+                }
+                .restaurant-price{
+                    font-size: 18px;
+                    font-weight: bold;
+                    position: relative;
+                    bottom: -16px;
+
+                }
+
+                .restaurant-bottom{
+                    display: flex;
+                    position: relative;
+                    bottom: -16px;
+
+                    .restaurant-lunch-time{
+                        font-size: 14px;
+                        flex: 1;
+                    }
+
+                    .restaurant-distance{
+                        color: #EF532E;
+                        font-size: 13px;
+                    }
                 }
             }
             
