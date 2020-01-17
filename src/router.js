@@ -41,12 +41,12 @@ const router = new Router({
             component: MenuCreate
         },
         { 
-            path: "/menudetail/:menuId",
+            path: "/menudetail/:restaurantId",
             name: "MenuDetail",
             component: MenuDetail
         },
         { 
-            path: "/menuupdate/:menuId",
+            path: "/menuupdate/:restaurantId",
             name: "MenuUpdate",
             component: MenuUpdate
         },

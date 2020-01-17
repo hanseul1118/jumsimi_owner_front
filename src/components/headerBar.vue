@@ -16,11 +16,11 @@
     </div>
     <div v-show="type == 2 && menuClick" class="header-menu">
       <div>
-        <div class="header-sub-menu">
+        <div class="header-sub-menu" @click="goCreateMenu()">
           <img src="@/assets/menu_dot.png" />
           식당등록
         </div>
-        <div class="header-sub-menu" @click="csClick()">
+        <div class="header-sub-menu" @click="goCs()">
           <img src="@/assets/menu_dot.png" />
           고객센터
         </div>
@@ -59,8 +59,11 @@
             goUpdate(){
                 this.$router.push({name:'MenuUpdate', props: { menuId:  this.passedMenuId}})
             },
-            csClick(){
+            goCs(){
                 this.$router.push({name:'CS'})
+            },
+            goCreateMenu(){
+                this.$router.push({name:'MenuCreate'})
             }
         }
     }
@@ -103,7 +106,7 @@
       height: 11px;
       position: absolute;
       top: 15px;
-      right: 5px;
+      right: 15px;
       img {
         width: 18px;
         height: 11px;
@@ -114,12 +117,15 @@
 
   .header-menu {
     width: 100%;
-    height: 117px;
+    height: 173px;
+    position: absolute;
+    background: white;
+    z-index: 1000;
 
     .header-sub-menu {
       color: #707070;
       font-size: 23px;
-      padding: 17px 0;
+      padding: 13px 0;
       margin: 0 38px;
       img {
         width: 7px;
