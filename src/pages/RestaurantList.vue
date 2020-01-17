@@ -2,12 +2,16 @@
     <div class="restaurant-list-container">
         <header-bar :type="2"></header-bar>
         <div class="restaurant-list-body">
-            <div v-for="(item, index) in restaurantList" class="restaurant-list-card" :key="index" @click="cardClick(item.restaurantId)">
-                <div class="card-left">
+            <div v-for="(item, index) in restaurantList" class="restaurant-list-card" :key="index" >
+                <div class="card-left" @click="likeClick(item)">
                     <!-- <img class="card-like" > -->
-                    <img @click="likeClick">
+                    <img class="card-img" >
+                    <img
+                    class="favorite-icon"
+                    :src="item.favoriteImg"
+                    />
                 </div>
-                <div class="card-right"> 
+                <div class="card-right" @click="goDetail(item.restaurantId)"> 
                     <div class="restaurant-top">
                         <div class="restaurant-name">{{item.restaurantName}}</div>
                         <div class="restaurant-type">{{item.menuType}}</div>
@@ -29,6 +33,15 @@
 <script>
     import HeaderBar from '../components/headerBar'
     export default {
+        created() {
+            for (let index = 0; index < this.restaurantList.length; index++) {
+                const data = this.restaurantList[index];
+        
+                    if (this.$store.state.favoriteList.indexOf(data.restaurantId) != -1) {
+                        data.isFavorite = true;
+                    }
+            }
+        },
         components : {
             HeaderBar
         },   
@@ -43,16 +56,19 @@
                         , lunchOperationTime : '점심시간 10:30 - 14:30'
                         , distance : '10m 이내'
                         , price : 0
-                        
+                        , isFavorite: false
+                        , favoriteImg : require('../assets/icon_favorite_off.svg')
                     },
                     {
-                        restaurantId : '1010101010'
+                        restaurantId : '2222'
                         , restaurantName : '엄마식당'
                         , menuType : '일간'
                         , contents : '8,000원' 
                         , lunchOperationTime : '점심시간 10:30 - 14:30'
                         , distance : '20m 이내'
                         , price : 0
+                        , isFavorite: false
+                        , favoriteImg : require('../assets/icon_favorite_off.svg')
                     }
                 ]
             }
@@ -66,13 +82,20 @@
             }
         },
         methods:{
-            likeClick(){
+            likeClick(data){
                 // console.log('err');
-                alert('hi')
+                if (data.isFavorite) {
+                    this.$store.commit("deleteFavoriteRes", data.restaurantId);
+                    data.favoriteImg = require('../assets/icon_favorite_off.svg')
+                } else {
+                    this.$store.commit("addFavoriteRes", data.restaurantId);
+                    data.favoriteImg = require('../assets/icon_favorite_on.svg')
+                }
 
+                data.isFavorite = !data.isFavorite;
             },
-            cardClick(id){
-                this.$router.push({name: "MenuDetail", params:{restaurantId : id}})
+            goDetail(id){
+                this.$router.push({ name : "MenuDetail" , params:{restaurantId : id}})
             }
 
         }
@@ -95,11 +118,20 @@
                 float: left;
                 text-align: center;
                 margin: 12px 0;
+                position: relative;
                 
-                img {
+                .card-img {
                     width: 124px;
                     height: 125px;
                     margin: auto;
+                }
+                .favorite-icon {
+                    z-index: 100;
+                    position: absolute;
+                    width: 30px;
+                    height: 30px;
+                    top: 4px;
+                    left: 19px;
                 }
             }
             .card-right{
