@@ -8,7 +8,7 @@
         점심이
       </div>
       <div v-show="type == 2" class="header-menu-img-container">
-        <img src="@/assets/arrow_down.png" @click="menuClick = !menuClick" />
+        <img src="@/assets/icon_header_menu.svg" @click="menuClick = !menuClick" />
       </div>
       <div v-show="type == 3" class="header-edit" @click="goUpdate()">
         수정
@@ -117,7 +117,7 @@
 
   .header-menu {
     width: 100%;
-    height: 173px;
+    height: 121px;
     position: absolute;
     background: white;
     z-index: 1000;
