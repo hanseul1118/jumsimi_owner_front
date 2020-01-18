@@ -8,7 +8,7 @@
                     <img class="card-img" >
                     <img
                     class="favorite-icon"
-                    :src="item.favoriteImg"
+                    :src="item.isFavorite? favoriteOffImg : favoriteOnImg"
                     />
                 </div>
                 <div class="card-right" @click="goDetail(item.restaurantId)"> 
@@ -47,7 +47,9 @@
         },   
         data(){
             return{
-                restaurantList : [
+                favoriteOffImg : require('../assets/icon_favorite_off.svg') 
+                , favoriteOnImg : require('../assets/icon_favorite_on.svg') 
+                , restaurantList : [
                     {
                         restaurantId : '1010101010'
                         , restaurantName : '깨돌이식당'
@@ -57,7 +59,6 @@
                         , distance : '10m 이내'
                         , price : 0
                         , isFavorite: false
-                        , favoriteImg : require('../assets/icon_favorite_off.svg')
                     },
                     {
                         restaurantId : '2222'
@@ -68,7 +69,6 @@
                         , distance : '20m 이내'
                         , price : 0
                         , isFavorite: false
-                        , favoriteImg : require('../assets/icon_favorite_off.svg')
                     }
                 ]
             }
@@ -83,16 +83,15 @@
         },
         methods:{
             likeClick(data){
+                data.isFavorite = !data.isFavorite;
+                
                 // console.log('err');
                 if (data.isFavorite) {
-                    this.$store.commit("deleteFavoriteRes", data.restaurantId);
-                    data.favoriteImg = require('../assets/icon_favorite_off.svg')
-                } else {
                     this.$store.commit("addFavoriteRes", data.restaurantId);
-                    data.favoriteImg = require('../assets/icon_favorite_on.svg')
+                } else {
+                    this.$store.commit("deleteFavoriteRes", data.restaurantId);
                 }
 
-                data.isFavorite = !data.isFavorite;
             },
             goDetail(id){
                 this.$router.push({ name : "MenuDetail" , params:{restaurantId : id}})
