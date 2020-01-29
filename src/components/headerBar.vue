@@ -10,13 +10,13 @@
       <div v-show="type == 2" class="header-menu-img-container">
         <img src="@/assets/icon_header_menu.svg" @click="menuClick = !menuClick" />
       </div>
-      <div v-show="type == 3" class="header-edit" @click="goUpdate()">
+      <div v-show="type == 3" class="header-edit" @click="goMenuUpdate()">
         수정
       </div>
     </div>
     <div v-show="type == 2 && menuClick" class="header-menu">
       <div>
-        <div class="header-sub-menu" @click="goCreateMenu()">
+        <div class="header-sub-menu" @click="goRestaurantCreate()">
           <img src="@/assets/menu_dot.png" />
           식당등록
         </div>
@@ -56,14 +56,14 @@
             goBack(){
                 history.go(-1);
             },
-            goUpdate(){
+            goMenuUpdate(){
                 this.$router.push({name:'MenuUpdate', props: { menuId:  this.passedMenuId}})
             },
             goCs(){
                 this.$router.push({name:'CS'})
             },
-            goCreateMenu(){
-                this.$router.push({name:'MenuCreate'})
+            goRestaurantCreate(){
+                this.$router.push({name:'RestaurantCreate'})
             }
         }
     }
