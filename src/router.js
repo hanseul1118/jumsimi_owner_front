@@ -7,7 +7,6 @@ import Router from "vue-router"
 // 화면
 import RestaurantList from "@/pages/RestaurantList.vue"
 import RestaurantCreate from "@/pages/RestaurantCreate.vue"
-import MenuCreate from "@/pages/MenuCreate.vue"
 import MenuDetail from "@/pages/MenuDetail.vue"
 import MenuUpdate from "@/pages/MenuUpdate.vue"
 import Login from "@/pages/Login.vue"
@@ -34,11 +33,6 @@ const router = new Router({
             path: "/restaurantcreate",
             name: "RestaurantCreate",
             component: RestaurantCreate
-        },
-        { 
-            path: "/menucreate",
-            name: "MenuCreate",
-            component: MenuCreate
         },
         { 
             path: "/menudetail/:restaurantId",
