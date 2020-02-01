@@ -7,22 +7,15 @@
       <div class="header-txt">
         점심이
       </div>
-      <div v-show="type == 2" class="header-menu-img-container">
+      <div v-show="type == 2 || type == 3" class="header-menu-img-container">
         <img src="@/assets/icon_header_menu.svg" @click="menuClick = !menuClick" />
       </div>
-      <div v-show="type == 3" class="header-edit" @click="goMenuUpdate()">
-        수정
-      </div>
     </div>
-    <div v-show="type == 2 && menuClick" class="header-menu">
+    <div v-show="(type == 2 || type == 3) && menuClick" class="header-menu">
       <div>
-        <div class="header-sub-menu" @click="goRestaurantCreate()">
+        <div v-for="(item, index) in menuList" :key="index" class="header-sub-menu" @click="emitFuncion(item.pathName)">
           <img src="@/assets/menu_dot.png" />
-          식당등록
-        </div>
-        <div class="header-sub-menu" @click="goCs()">
-          <img src="@/assets/menu_dot.png" />
-          고객센터
+          {{ item.menuName }}
         </div>
       </div>
     </div>
@@ -41,29 +34,31 @@
                 /**
                  *  0:타이틀
                  *  1:타이틀 + 뒤로가기 버튼
-                 *  2:타이틀 + 메뉴버튼
-                 *  3:타이틀 + 뒤로가기 + 수정 버튼*/
+                 *  2:타이틀 + 메뉴 버튼
+                 *  3:타이틀 + 뒤로가기 + 메뉴 버튼 */
                 type: Number,
-                default : 0,
-                required : false
+                default: 0,
+                required: false
             },
             passedMenuId: {
                 type: String,
+                default: undefined,
                 required: false
+            },
+            menuList: {
+              type: Array,
+              required: false
             }
         },
         methods:{
             goBack(){
                 history.go(-1);
             },
-            goMenuUpdate(){
-                this.$router.push({name:'MenuUpdate', props: { menuId:  this.passedMenuId}})
-            },
-            goCs(){
-                this.$router.push({name:'CS'})
-            },
-            goRestaurantCreate(){
-                this.$router.push({name:'RestaurantCreate'})
+            emitFuncion(pathName){
+              if(this.passedMenuId) {
+                this.$router.push({name: pathName, props: { menuId:  this.passedMenuId}})
+              }
+              this.$router.push({name:pathName})
             }
         }
     }
@@ -117,24 +112,25 @@
 
   .header-menu {
     width: 100%;
-    height: 121px;
+    height: auto;
     position: absolute;
-    background: white;
-    z-index: 1000;
+    z-index: 101;
 
     .header-sub-menu {
+      background: white;
+      width: 100%;
       color: #707070;
       font-size: 23px;
-      padding: 13px 0;
-      margin: 0 38px;
+      padding: 13px 38px;
       img {
         width: 7px;
         padding-bottom: 6px;
       }
+      border-bottom: 1px solid #efefef;
     }
 
-    .header-sub-menu:first-child {
-      border-bottom: 1px solid #efefef;
+    .header-sub-menu:last-child {
+      border-bottom: 0px;
     }
   }
 }

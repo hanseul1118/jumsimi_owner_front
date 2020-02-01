@@ -1,6 +1,6 @@
 <template>
     <div class="restaurant-list-container">
-        <header-bar :type="2"></header-bar>
+        <header-bar :type="2" :menuList="menuList"></header-bar>
         <div class="restaurant-list-body">
             <div v-for="(item, index) in restaurantList" class="restaurant-list-card" :key="index" >
                 <div class="card-left" @click="likeClick(item)">
@@ -50,26 +50,30 @@
                 favoriteOffImg : require('../assets/icon_favorite_off.svg') 
                 , favoriteOnImg : require('../assets/icon_favorite_on.svg') 
                 , restaurantList : [
-                    {
-                        restaurantId : '1010101010'
-                        , restaurantName : '깨돌이식당'
-                        , menuType : '주간'
-                        , contents : '7,000원' 
-                        , lunchOperationTime : '점심시간 10:30 - 14:30'
-                        , distance : '10m 이내'
-                        , price : 0
-                        , isFavorite: false
-                    },
-                    {
-                        restaurantId : '2222'
-                        , restaurantName : '엄마식당'
-                        , menuType : '일간'
-                        , contents : '8,000원' 
-                        , lunchOperationTime : '점심시간 10:30 - 14:30'
-                        , distance : '20m 이내'
-                        , price : 0
-                        , isFavorite: false
-                    }
+                  {
+                    restaurantId : '1010101010'
+                    , restaurantName : '깨돌이식당'
+                    , menuType : '주간'
+                    , contents : '7,000원' 
+                    , lunchOperationTime : '점심시간 10:30 - 14:30'
+                    , distance : '10m 이내'
+                    , price : 0
+                    , isFavorite: false
+                  },
+                  {
+                    restaurantId : '2222'
+                    , restaurantName : '엄마식당'
+                    , menuType : '일간'
+                    , contents : '8,000원' 
+                    , lunchOperationTime : '점심시간 10:30 - 14:30'
+                    , distance : '20m 이내'
+                    , price : 0
+                    , isFavorite: false
+                  }
+                ]
+                , menuList : [
+                  { menuName : '식당등록', pathName: 'RestaurantCreate' },
+                  { menuName : '고객센터', pathName: 'CS' }
                 ]
             }
         },

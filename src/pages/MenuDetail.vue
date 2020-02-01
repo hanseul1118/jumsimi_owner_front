@@ -1,6 +1,6 @@
 <template>
   <div class="menu-detail-container">
-    <header-bar class="header-bar" :type="3" :passedMenuId="menuId"></header-bar>
+    <header-bar class="header-bar" :type="3" :passedMenuId="menuId" :menuList="menuList"></header-bar>
     <div class="menu-detail-flex-box">
       <div class="menu-detail-top">
         <div class="menu-detail-top-left">
@@ -88,7 +88,12 @@ export default {
       phone: "02-2361-3345",
       isFavorite: false,
       menuId: "1",
-      slides: ["https://picsum.photos/1024/480/?image=12", "https://picsum.photos/1024/480/?image=22", "https://picsum.photos/1024/480/?image=10"]
+      slides: ["https://picsum.photos/1024/480/?image=12", "https://picsum.photos/1024/480/?image=22", "https://picsum.photos/1024/480/?image=10"],
+      menuList: [
+        { menuName : '메뉴수정', pathName: 'MenuUpdate' },
+        { menuName : '신고하기', pathName: 'CS' }, // Todo 신고하기 path 지정 필요
+        { menuName : '고객센터', pathName: 'CS' }
+      ]
     };
   },
   computed: {
