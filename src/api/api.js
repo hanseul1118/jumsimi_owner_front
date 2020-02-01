@@ -1,6 +1,6 @@
-VUE_APP_API_ENDPOINT = 'http://[::1]:3000'
+// const VUE_APP_API_ENDPOINT = 'http://[::1]:3000'
 
-const API_URL = process.env.VUE_APP_API_ENDPOINT
+// const API_URL = process.env.VUE_APP_API_ENDPOINT
 
 const API = {
   // 1. 로그인
