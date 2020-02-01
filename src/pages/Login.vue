@@ -28,11 +28,41 @@ export default {
     };
   },
   methods: {
-    login: function() {
-      let userId = this.userId;
-      let userPassword = this.userPassword;
+    login() {
+      if(!this.userId || !this.userPassword) {
+        alert('삐.')
+      }
 
-      console.log("userId: ", userId, "userPassword: ", userPassword);
+      let request = {
+        userId: this.userId,
+        userPassword: this.userPassword
+      }
+
+      this.$api
+        .login(request)
+        .then(response => {
+          switch (response.data.errCode) {
+            case 200: {
+              this.$store.commit('setUserInfo', response.data);
+              console.log('response.data : ', response.data)
+              this.$router.push({name: 'RestaurantList'})
+              break
+            }
+            case 400: {
+              alert(response.data.msg)
+              break
+            }
+            default: {
+              console.log('response.data', response.data)
+              alert('로그인이 되지 않습니다. 잠시 후 시도해 주세요')
+              break
+            }
+          }
+        })
+        .catch(err => {
+          console.log('error =====>', err)
+          alert('axios catch')
+        })
     }
   }
 };

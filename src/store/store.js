@@ -13,8 +13,21 @@ export const store = new Vuex.Store({
   , loading: false
   , favoriteList: []
   },
-  // 동기 처리로 state 값을 처리할 경우
-  actions: {
+  getters: {
+    getToken: state => {
+      if (state.userInfo && state.userInfo.token) {
+        return state.userInfo.token
+      } else {
+        return undefined
+      }
+    },
+    getUserId: state => {
+      if (state.userInfo.userId) {
+        return state.userInfo.userId
+      } else {
+        return undefined
+      }
+    }
   },
   // 비동기 처리로 state 값을 처리할 경우
   mutations: {
@@ -35,6 +48,10 @@ export const store = new Vuex.Store({
   , deleteFavoriteRes(state, menuId) {
       state.favoriteList.splice(state.favoriteList.indexOf(menuId), 1);
     }
+  , setUserInfo(state, userInfo) {
+    state.userInfo.token = userInfo.token
+    state.userInfo.userId = userInfo.userId
+  },
   }
 })
 

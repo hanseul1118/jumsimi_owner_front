@@ -1,10 +1,14 @@
-// const VUE_APP_API_ENDPOINT = 'http://[::1]:3000'
+import axios from 'axios'
 
-// const API_URL = process.env.VUE_APP_API_ENDPOINT
+let API_URL = process.env.VUE_APP_API_ENDPOINT
 
 const API = {
   // 1. 로그인
+  login (request) {
+    let url = `${API_URL}/api/login`
 
+    return axios.get(url, { params: request })
+  }
   // 2. 메뉴 리스트
 
   // 3. 메뉴 상세 (가게 정보 포함)
