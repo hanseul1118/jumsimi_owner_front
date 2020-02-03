@@ -9,15 +9,13 @@ import API from '@/api/api.js'
 import BootstrapVue from 'bootstrap-vue/dist/bootstrap-vue.esm'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-// import DatePicker from 'tui-date-picker'
-
+import DatePicker from 'tui-date-picker'
 
 Vue.use(BootstrapVue)
-// Vue.use(DatePicker)
 
 Vue.prototype.$http = axios
 Vue.prototype.$api = API
-// Vue.prototype.$datePicker = DatePicker
+Vue.prototype.$datePicker = DatePicker
 
 Vue.config.productionTip = false
 Vue.config.silent = false /* true: 로그, 경고 출력 안함 */
