@@ -12,15 +12,18 @@
       </div>
       <div class="menu-input">
         <div class="start-date">시작일
-            <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-                <input type="text" id="tui-date-picker-target" aria-label="Date-Time">
-                <span class="tui-ico-date"></span>
-            </div>
-
-            <div id="tui-date-picker-container" style="margin-top: -1px;"></div>
+          <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+              <input id="startpicker-input" type="text" aria-label="Date">
+              <span class="tui-ico-date"></span>
+              <div id="startpicker-container" style="margin-left: -1px;"></div>
+          </div>
         </div>
         <div class="end-date">종료일
-          <input>
+          <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+              <input id="endpicker-input" type="text" aria-label="Date">
+              <span class="tui-ico-date"></span>
+              <div id="endpicker-container" style="margin-left: -1px;"></div>
+          </div>
         </div>
         <div class="menu-price">
           <input>
@@ -35,23 +38,29 @@
 
 <script>
   import HeaderBar from "../components/headerBar"
-  import DatePicker from 'tui-date-picker'
 
   export default {
     mounted(){
-        let container = document.getElementById('tui-date-picker-container');
-        let target = document.getElementById('tui-date-picker-target');
 
-
-        let instance = new DatePicker(container, {
-            input: {
-                element: target
+        let today = new Date();
+        let picker = this.$datePicker.createRangePicker({
+            startpicker: {
+                date: today,
+                input: '#startpicker-input',
+                container: '#startpicker-container'
             },
-            language: 'ko'
+            endpicker: {
+                date: today,
+                input: '#endpicker-input',
+                container: '#endpicker-container'
+            },
+            selectableRanges: [
+                [today, new Date(today.getFullYear() + 1, today.getMonth(), today.getDate())]
+            ]
         });
 
+        console.log('picker', picker)
 
-        instance.getDate();
     },
     components:{
       HeaderBar
@@ -60,6 +69,7 @@
 </script>
 
 <style lang="scss" scoped>
+
 .menu-update-container {
   .menu-update-body{
     width:90%;
