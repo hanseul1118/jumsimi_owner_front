@@ -11,7 +11,7 @@
                     :src="item.isFavorite? favoriteOffImg : favoriteOnImg"
                     />
                 </div>
-                <div class="card-right" @click="goDetail(item.restaurantId)"> 
+                <div class="card-right" @click="goDetail(item.menuId)"> 
                     <div class="restaurant-top">
                         <div class="restaurant-name">{{item.restaurantName}}</div>
                         <div class="restaurant-type">{{item.menuType}}</div>
@@ -37,7 +37,7 @@
             for (let index = 0; index < this.restaurantList.length; index++) {
                 const data = this.restaurantList[index];
         
-                    if (this.$store.state.favoriteList.indexOf(data.restaurantId) != -1) {
+                    if (this.$store.state.favoriteList.indexOf(data.menuId) != -1) {
                         data.isFavorite = true;
                     }
             }
@@ -51,7 +51,7 @@
                 , favoriteOnImg : require('../assets/icon_favorite_on.svg') 
                 , restaurantList : [
                   {
-                    restaurantId : '1010101010'
+                    menuId : 'MENU_ID 01'
                     , restaurantName : '깨돌이식당'
                     , menuType : '주간'
                     , contents : '7,000원' 
@@ -61,7 +61,7 @@
                     , isFavorite: false
                   },
                   {
-                    restaurantId : '2222'
+                    menuId : 'MENU_ID 02'
                     , restaurantName : '엄마식당'
                     , menuType : '일간'
                     , contents : '8,000원' 
@@ -91,14 +91,14 @@
                 
                 // console.log('err');
                 if (data.isFavorite) {
-                    this.$store.commit("addFavoriteRes", data.restaurantId);
+                    this.$store.commit("addFavoriteRes", data.menuId);
                 } else {
-                    this.$store.commit("deleteFavoriteRes", data.restaurantId);
+                    this.$store.commit("deleteFavoriteRes", data.menuId);
                 }
 
             },
             goDetail(id){
-                this.$router.push({ name : "MenuDetail" , params:{restaurantId : id}})
+                this.$router.push({ name : "MenuDetail" , params:{menuId : id}})
             }
 
         }
