@@ -46,17 +46,17 @@
         </div>
         <div class="menu-detail-bottom-contents">
           <p>{{ contents }}</p>
-          <p>{{ price }} </p>
         </div>
         <div class="menu-detail-bottom-info">
-          <div class="menu-detail-bottom-info-distance">
-            <p>{{ distance }}</p>
+          <div class="menu-detail-bottom-info-price">
+            <p>{{ price }}</p>
           </div>
           <div class="menu-detail-bottom-info-address">
             <p>{{ restaurantAddress }}</p>
           </div>
-          <div class="menu-detail-bottom-info-phone">
-            <p>{{ restaurantPhone }}</p>
+          <div class="menu-detail-bottom-info-phone-distance">
+            <span>{{ restaurantPhone }}</span>
+            <span>{{ distance }}</span>
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@ import HeaderBar from "@/components/headerBar";
 
 export default {
   created() {
-    this.menuId = this.$route.params.restaurantId
+    this.menuId = this.$route.params.menuId
     if (this.$store.state.favoriteList.indexOf(this.menuId) != -1) {
       this.isFavorite = true;
     }
@@ -90,6 +90,7 @@ export default {
       restaurantImage2: undefined,
       restaurantImage3: undefined,
       restaurantImage4: undefined,
+      restaurantId: undefined,
       menuType: undefined,
       startDate: "2020-01-12",
       endDate: "2020-01-17",
@@ -178,30 +179,46 @@ export default {
       this.$api.menuDetail(params)
       .then(response => {
         console.log('response : ', response)
-        if(response.data.errCode == 200) {
-          this.price = response.data.price,
-          this.menuImage = response.data.menu_image,
-          this.contents = response.data.contents,
-          this.menuType = response.data.menu_type,
-          this.startDate = response.data.start_date,
-          this.endData = response.data.end_data,
-          this.restaurantName = response.data.restaurant_name,
-          this.restaurantAddress = response.data.restaurant_address,
-          this.restaurantPhone = response.data.restaurant_phone,
-          this.operationTime = response.data.operation_time,
-          this.restaurantImage1 = response.data.restaurant_image_1,
-          this.restaurantImage2 = response.data.restaurant_image_2,
-          this.restaurantImage3 = response.data.restaurant_image_3,
-          this.restaurantImage4 = response.data.restaurant_image_4,
-          this.restaurantId = response.data.restaurant_id,
-          this.gpsX = response.data.gps_x,
-          this.gpsY = response.data.gps_y,
-          this.isCompleted = true
+        switch(response.data.errCode) {
+          case 200: {
+            this.mapResult(response.data)
+            break;
+          }
+          case 400: {
+            alert(response.data.msg)
+            this.$router.go(-1)
+            break;
+          }
+          default: {
+            alert('server error: ', response.data.msg)
+            this.$router.go(-1)
+            break;
+          }
         }
       })
       .catch(error => {
-        console.log('error : ',error)
+        console.log('network error : ', error)
       })
+    },
+    mapResult(result) {
+      this.price = result.price,
+      this.menuImage = result.menu_image,
+      this.contents = result.contents,
+      this.menuType = result.menu_type,
+      this.startDate = result.start_date,
+      this.endDate = result.end_date,
+      this.restaurantName = result.restaurant_name,
+      this.restaurantAddress = result.restaurant_address,
+      this.restaurantPhone = result.restaurant_phone,
+      this.operationTime = result.operation_time,
+      this.restaurantImage1 = result.restaurant_image_1,
+      this.restaurantImage2 = result.restaurant_image_2,
+      this.restaurantImage3 = result.restaurant_image_3,
+      this.restaurantImage4 = result.restaurant_image_4,
+      this.restaurantId = result.restaurant_id,
+      this.gpsX = result.gps_x,
+      this.gpsY = result.gps_y,
+      this.isCompleted = true
     }
   },
   filters: {
@@ -311,6 +328,7 @@ export default {
           width: 100%;
           p {
             font-size: 17px;
+            letter-spacing: 0.2px;
             line-height: 35px;
             position: absolute;
           }
@@ -331,7 +349,7 @@ export default {
         p {
           margin: 0;
         }
-        .menu-detail-bottom-info-distance {
+        .menu-detail-bottom-info-price {
           margin-bottom: 10px;
 
           p {
@@ -348,11 +366,17 @@ export default {
             font-size: 22px;
           }
         }
-        .menu-detail-bottom-info-phone {
-          p {
+        .menu-detail-bottom-info-phone-distance {
+          span {
             font-size: 20px;
             font-weight: bold;
+          }
+          span:first-child {
             color: #cf5252;
+          }
+          span:last-child {
+            margin-left: 10px;
+            color: #642A02;
           }
         }
       }
