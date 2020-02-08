@@ -3,77 +3,152 @@
     <header-bar :type=1></header-bar>
     <div class="menu-update-body">
       <div class="menu-top">
-        <img class="menu-img"/>
+        <img :src="menuImage" class="menu-img"/>
       </div>
       <div class="menu-type-bar">
-        <div class="type-day">매일</div>
-        <div class="type-week">주간</div>
-        <div class="type-month">월간</div>
+        <div class="type-day menu-type">매일</div>
+        <div class="type-week menu-type">주간</div>
+        <div class="type-month menu-type">월간</div>
       </div>
       <div class="menu-input">
-        <div class="start-date">시작일
-          <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-              <input id="startpicker-input" type="text" aria-label="Date">
-              <span class="tui-ico-date"></span>
-              <div id="startpicker-container" style="margin-left: -1px;"></div>
-          </div>
+        <div class="start-date">
+          <div class="date-label">시작일</div>
+          <input v-model="startDate"> 
         </div>
-        <div class="end-date">종료일
-          <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-              <input id="endpicker-input" type="text" aria-label="Date">
-              <span class="tui-ico-date"></span>
-              <div id="endpicker-container" style="margin-left: -1px;"></div>
-          </div>
+        <div class="end-date">
+          <div class="date-label">종료일</div>
+          <input v-model="endDate"> 
         </div>
         <div class="menu-price">
-          <input>
-          원</div>
+          <input class="price-input" v-model="price">
+          <div class="won">원</div>
+        </div>
       </div>
       <div class="menu-textarea">
-        <textarea></textarea>
+        <textarea v-model="contents"></textarea>
       </div>
+    </div>
+    <div class="menu-update-bar"> 
+      <input class="menu-update-put" type="submit" value="메뉴수정" @click="setMenu">
     </div>
   </div>
 </template>
 
 <script>
-  import HeaderBar from "../components/headerBar"
+
+  import HeaderBar from "@/components/headerBar"
 
   export default {
-    mounted(){
+    created() {
+      this.menuId = this.$route.params.restaurantId
 
-        let today = new Date();
-        let picker = this.$datePicker.createRangePicker({
-            startpicker: {
-                date: today,
-                input: '#startpicker-input',
-                container: '#startpicker-container'
-            },
-            endpicker: {
-                date: today,
-                input: '#endpicker-input',
-                container: '#endpicker-container'
-            },
-            selectableRanges: [
-                [today, new Date(today.getFullYear() + 1, today.getMonth(), today.getDate())]
-            ]
-        });
-
-        console.log('picker', picker)
-
+      this.getMenuDetail(this.menuId)
+    },
+    updated(){
+      // console.log(5, this.endDate, '/', this.startDate)
+    },
+    watch:{
+      // endDate(oldVal, newVal){
+      //   console.log("oldVal : " , oldVal)
+      //   console.log("newVal : " ,newVal)
+      // }
     },
     components:{
       HeaderBar
+    },
+    data() {
+      return{
+        menuId: "1",
+        menuImage: undefined,
+        menuType: undefined,
+        startDate: new Date().toISOString().substr(0, 10),
+        endDate: new Date().toISOString().substr(0, 10),
+        menu: false,
+        modal: false,
+        menu2: false,
+        contents: "",
+        price: 0
+      };
+    },
+    methods: {
+      getMenuDetail(menuId) {
+          let params = {
+            menuId : menuId
+          }
+          
+          this.$api.menuDetail(params)
+          .then(response => {
+            console.log('response : ', response)
+            console.log(3)
+            if(response.data.errCode == 200) {
+              this.price = response.data.price,
+              this.menuImage = response.data.menu_image,
+              this.contents = response.data.contents,
+              this.menuType = response.data.menu_type,
+              this.startDate = response.data.start_date,
+              this.endDate = response.data.end_date,
+              this.restaurantId = response.data.restaurant_id
+            }
+          })
+          .catch(error => {
+            console.log('error : ',error)
+          })
+      },
+      setMenu(){
+        let params = {
+          menuId : this.menuId,
+          price : this.price,
+          menuImage : this.menuImage,
+          contents : this.contents,
+          menuType : this.menuType,
+          startDate : this.startDate,
+          endDate : this.endDate
+        }
+
+        console.log("param : " , params)
+
+        this.$api.menuUpdate(params)
+        .then(response => {
+          console.log('result : ' , response)
+
+        })
+        .catch(error => {
+          console.log('error : ' , error)
+        })
+      }
     }
+    // filters: {
+    // formatPrice: function(price) {
+    //   console.log("price : " ,price)
+    //   let point, len, str ;
+
+    //   point = String(price).length % 3 ;
+    //   len = String(price).length ; 
+
+    //   str = String(price).substring(0, point)
+      
+    //   console.log("str : ", str)
+    //   while (point < len) {
+    //     if(str != "") str += ",";
+    //     str += String(price).substring(point, point + 3);
+    //     point += 3;
+    //   }
+
+    //   console.log("return : " ,str)
+
+    //   return str;
+    // }
+  // }
   };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 .menu-update-container {
   .menu-update-body{
     width:90%;
     margin: 0 auto;
+    padding-bottom: 70px; 
     .menu-top{
       .menu-img{
         width:100%;
@@ -88,7 +163,7 @@
       width: 181px;
       height: 42px;
       text-align: center;
-      div{
+      .menu-type{
         width: 60px;
         height: 42px;
         padding: 4px 0 ;
@@ -101,8 +176,6 @@
       .type-day{
         border-radius: 19px 0 0 19px;
         border-right: none;
-        background-color: #CF5252;
-        color:white;
       }
       .type-month{
         border-radius: 0 19px 19px 0;
@@ -111,23 +184,47 @@
     }
     .menu-input{
       clear: both;
-
-      div{
-          border-bottom: 1px solid #D9D8D8;
-          width:100%; 
-          padding: 10px;
-          color: #000000;
-          font-size:22px;
+      
+      .start-date , .end-date{
+        clear: both;
+        border-bottom: 1px solid #D9D8D8;
+        padding: 11px 0 ;
         input{
-          border: none;
-          width: calc(100% - 110px);
-          margin-left:30px;
+          border:none;
+          width: calc(100% - 95px);
+          text-align: center;
+          letter-spacing: 3px;
+          line-height: 33px;
+          font-size : 20px; 
+
         }
       }
-
-      .start-date{
-        border-top:1px solid #D9D8D8;
-        // border-top:1px solid #D9D8D8;
+      .date-label{
+        font-size: 22px;
+        width: 95px;
+        line-height: 33px;
+        text-align: center;
+        float: left;
+      }
+      .menu-price{
+        border-bottom: 1px solid #D9D8D8;
+        padding: 11px 0 ;
+        .price-input{
+          width: calc(100% - 60px);
+          border: none;
+          height: 32px;
+          font-size: 20px;
+          padding-left: 19px;
+          letter-spacing: 3px;
+        }
+        .won{
+          width:50px;
+          line-height: 32px;
+          font-size:22px;
+          float: right;
+          text-align: right;
+          padding-right: 19px;
+        }
       }
     }
     .menu-textarea{
@@ -137,8 +234,28 @@
         margin-top: 21px;
         resize: none;
         border: 1px solid #D9D8D8;
+        font-size: 20px;
+        padding: 19px;
+
       }
     }
+  }
+  .menu-update-bar{
+    width: 100%;
+    height: 50px;
+
+    position: fixed;
+    bottom: 0;
+
+    .menu-update-put{
+      width: 100%;
+      height: 100%;
+      background-color: #CF5252;
+      border: none;
+      color: white;
+      font-size: 38px;
+    }
+
   }
 }
 </style>
