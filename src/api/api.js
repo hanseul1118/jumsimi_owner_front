@@ -16,12 +16,17 @@ const API = {
     let url = `${API_URL}/api/menudetail`
 
     return axios.get(url, { params: request })
-  }
+  },
   // 4. 메뉴 상세
 
   // 5. 메뉴 수정
 
-  // 6. 
+  // 6. 식당 리스트 조회
+  restaurantList (request) {
+    let url = `${API_URL}/api/restaurant`
+
+    return axios.get(url,{ params : request })
+  }
 }
 
 export default API
