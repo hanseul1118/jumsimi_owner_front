@@ -20,7 +20,12 @@ const API = {
   // 4. 메뉴 상세
 
   // 5. 메뉴 수정
-  
+  menuUpdate (request) {
+    let url = `${API_URL}/api/menu`
+    
+    return axios.put(url, request )
+  },
+
   // 6. 식당 등록
   createRestaurant (request) {
     let url = `${API_URL}/api/restaurant`
