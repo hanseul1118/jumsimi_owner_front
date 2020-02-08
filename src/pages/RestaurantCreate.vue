@@ -3,10 +3,12 @@
     <HeaderBar :type="0" class="header-bar"></HeaderBar>
     <div class="restaurant-create-flex-box">
       <div class="restaurant-create-img">
-        <input type="file" accept="image/*" id="image-input" >
-        <label for="image-input">
-          <img src="https://live.staticflickr.com/65535/48580618611_2dab0d71f5_o.jpg" />
-        </label>
+        <input id="file" type="file" ref="file" @change="previewImage" accept="image/*">
+        <div>
+          <!-- <label for="file">
+          </label> -->
+          <img id="preview-image" :src="imageData" @click="imageClick()">
+        </div>
       </div>
       <div class="restaurant-create-input-box">
         <input type="text" :placeholder=resNamePlaceholder v-model=resName>
@@ -45,21 +47,81 @@
         resOperTime: "",
         resLat: "",
         resLng: "",
-        restaurantImage: []
+        restaurantImage: [],
+        imageData: 'https://live.staticflickr.com/65535/48580618611_2dab0d71f5_o.jpg',
+        file: undefined
       }
     },
     methods: {
       createRestaurant: function() {
-        console.log(
-          this.resName,
-          this.resOwnersId,
-          this.resAddress,
-          this.resPhone,
-          this.resOperTime,
-          this.resLat,
-          this.resLng
-        )
-      }
+        let formData = new FormData();
+        
+        formData.append('file', this.file);
+        formData.append('resOwnersId', this.resOwnersId);
+        formData.append('restaurantName', this.resName);
+        formData.append('restaurantAddress', this.resAddress);
+        formData.append('restaurantPhone', this.resPhone);
+        formData.append('gpsX', this.resLat);
+        formData.append('gpsY', this.resLng);
+        formData.append('lunchOperationTime', this.resOperTime);
+
+        this.$api.createRestaurant(formData)
+        .then((response) => {
+          switch(response.data.errCode) {
+            case 200:
+              this.$router.push({name: 'RestaurantList'}) 
+              break;
+            case 500:
+              alert(response.data.msg) 
+              break;
+            default:
+              console.log('check errCode : ', response.data);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+      },
+      imageClick() {
+        document.getElementById('file').click()
+      },
+      previewImage: function(event) {
+        console.log('event : ', event)
+        this.file = this.$refs.file.files[0];
+        
+        if(!this.file) {
+          return;
+        }
+
+        this.checkFileSize()
+
+        let reader = new FileReader();
+
+        reader.onload = (e) => {
+          this.imageData = e.target.result;
+
+          let image = new Image();
+          image.src = e.target.result;
+
+          image.onload = function() {
+            document.getElementById('preview-image').style.width = '340px'
+            document.getElementById('preview-image').style.height = '340px'
+          };
+        }
+
+        reader.readAsDataURL(this.file);
+      },
+      checkFileSize() {
+        var maxSize  = 5 * 1024 * 1024 // 5MB
+        var fileSize = 0;
+        
+        fileSize = parseInt(this.file.size)
+
+        if(fileSize > maxSize) {
+          alert("프리뷰 용량은 5MB 보다 작아야 합니다.");
+          return;
+        }
+      },
     }
   }
 </script>
@@ -77,6 +139,8 @@
       flex-direction: column;
 
       .restaurant-create-img {
+        position: relative;
+        display: block;
         width: 100%;
         background-color: #F7F7F7;
         input {
@@ -96,6 +160,7 @@
       }
        
       .restaurant-create-input-box {
+        display: block;
         width: 100%;
         input:first-child {
           margin-top: 10px;

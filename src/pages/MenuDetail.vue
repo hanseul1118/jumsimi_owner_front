@@ -74,6 +74,7 @@ export default {
       this.isFavorite = true;
     }
     this.getMenuDetail(this.menuId)
+    this.getGeoInfo(this)
   },
   components: {
     HeaderBar
@@ -100,14 +101,16 @@ export default {
       restaurantPhone: "02-2361-3345",
       isFavorite: false,
       menuId: "1",
-      gpsX: undefined,
-      gpsY: undefined,
+      gpsX: 0,
+      gpsY: 0,
       // slides: ["https://picsum.photos/1024/480/?image=12", "https://picsum.photos/1024/480/?image=22", "https://picsum.photos/1024/480/?image=10"],
       menuList: [
         { menuName : '메뉴수정', pathName: 'MenuUpdate' },
         { menuName : '신고하기', pathName: 'CS' }, // Todo 신고하기 path 지정 필요
         { menuName : '고객센터', pathName: 'CS' }
-      ]
+      ],
+      geoX: 0,
+      geoY: 0
     };
   },
   computed: {
@@ -155,7 +158,9 @@ export default {
     },
     distance: function() {
       if(this.gpsX) {
-        return '거리'
+        let targetX = this.gpsX
+        let targetY = this.gpsY
+        return this.getDistance(this.geoX, this.geoY, targetX, targetY, 'M')
       } else {
         return '알수없음'
       }
@@ -171,7 +176,7 @@ export default {
 
       this.isFavorite = !this.isFavorite;
     },
-    getMenuDetail(menuId) {
+    getMenuDetail: function(menuId) {
       let params = {
         menuId : menuId
       }
@@ -200,7 +205,7 @@ export default {
         console.log('network error : ', error)
       })
     },
-    mapResult(result) {
+    mapResult: function(result) {
       this.price = result.price,
       this.menuImage = result.menu_image,
       this.contents = result.contents,
@@ -216,9 +221,44 @@ export default {
       this.restaurantImage3 = result.restaurant_image_3,
       this.restaurantImage4 = result.restaurant_image_4,
       this.restaurantId = result.restaurant_id,
-      this.gpsX = result.gps_x,
-      this.gpsY = result.gps_y,
+      this.gpsX = Number(result.gps_x),
+      this.gpsY = Number(result.gps_y),
       this.isCompleted = true
+    },
+    getGeoInfo: function(that) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition (function(pos) {
+          that.geoX = pos.coords.latitude;
+          that.geoY = pos.coords.longitude;
+          alert(`현재 위치는 x: ${pos.coords.latitude}, y: ${pos.coords.longitude} 이고 시간은 ${pos.timestamp}`)
+        });
+      } else {
+          alert("이 브라우저에서는 Geolocation이 지원되지 않습니다.")
+      }
+    },
+    getDistance: function(lat1, lon1, lat2, lon2, unit) {
+      if ((lat1 == lat2) && (lon1 == lon2)) {
+        return 0;
+      }
+      else {
+        let radlat1 = Math.PI * lat1/180;
+        let radlat2 = Math.PI * lat2/180;
+        let theta = lon1-lon2;
+        let radtheta = Math.PI * theta/180;
+        let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+
+        dist = Math.acos(dist);
+        dist = dist * 180/Math.PI;
+        dist = dist * 60 * 1.1515;
+        if (unit=="M") { dist = dist * 1.609344 * 1000}
+        if (unit=="N") { dist = dist * 0.8684 }
+
+        if(dist > 1000) {
+          return `${(dist / 1000).toFixed(1)}K 이내`
+        } else {
+          return `${dist.toFixed(0)}M 이내`
+        }
+      }
     }
   },
   filters: {
@@ -226,7 +266,7 @@ export default {
       return startDate + " ~ " + endDate;
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

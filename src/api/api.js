@@ -20,8 +20,16 @@ const API = {
   // 4. 메뉴 상세
 
   // 5. 메뉴 수정
+  
+  // 6. 식당 등록
+  createRestaurant (request) {
+    let url = `${API_URL}/api/restaurant`
+    let headers = { 
+      'Content-Type': 'multipart/form-data'
+    }
 
-  // 6. 식당 리스트 조회
+    return axios.post(url, request, { headers: headers })
+  // 7. 식당 리스트 조회
   restaurantList (request) {
     let url = `${API_URL}/api/restaurant`
 
