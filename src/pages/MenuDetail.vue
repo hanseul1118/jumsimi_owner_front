@@ -122,7 +122,7 @@ export default {
       }
     },
     slides: function() {
-      if(this.menuImage) {
+      if(this.isCompleted) {
         let tempArray = [
           this.menuImage,
           this.restaurantImage1,
@@ -130,14 +130,15 @@ export default {
           this.restaurantImage3,
           this.restaurantImage4
         ]
+
         let resArray = []
-        
-        for(let image in tempArray) {
-          if(image) {
-            resArray.push(image)
+        tempArray.forEach((value) => {
+          console.log('value : ', value)
+          if(value) {
+            resArray.push(value)
           }
-        }
-        
+        })
+
         return resArray
       } else {
         return [
@@ -183,7 +184,6 @@ export default {
 
       this.$api.menuDetail(params)
       .then(response => {
-        console.log('response : ', response)
         switch(response.data.errCode) {
           case 200: {
             this.mapResult(response.data)
@@ -230,7 +230,6 @@ export default {
         navigator.geolocation.getCurrentPosition (function(pos) {
           that.geoX = pos.coords.latitude;
           that.geoY = pos.coords.longitude;
-          alert(`현재 위치는 x: ${pos.coords.latitude}, y: ${pos.coords.longitude} 이고 시간은 ${pos.timestamp}`)
         });
       } else {
           alert("이 브라우저에서는 Geolocation이 지원되지 않습니다.")
