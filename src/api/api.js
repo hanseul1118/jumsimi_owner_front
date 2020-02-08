@@ -29,9 +29,10 @@ const API = {
     }
 
     return axios.post(url, request, { headers: headers })
+  },
   // 7. 식당 리스트 조회
   restaurantList (request) {
-    let url = `${API_URL}/api/restaurant`
+    let url = `${API_URL}/api/menu`
 
     return axios.get(url,{ params : request })
   }
