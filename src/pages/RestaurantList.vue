@@ -1,14 +1,14 @@
 <template>
     <div class="restaurant-list-container">
-        <header-bar :type="2" :menuList="menuList"></header-bar>
+        <header-bar :type="2" :menuList="headerList"></header-bar>
         <div class="restaurant-list-body">
-            <div v-for="(item, index) in restaurantList" class="restaurant-list-card" :key="index" >
+            <div v-for="(item, index) in menuList" class="restaurant-list-card" :key="index" >
                 <div class="card-left" @click="likeClick(item)">
                     <!-- <img class="card-like" > -->
                     <img class="card-img" >
                     <img
                     class="favorite-icon"
-                    :src="item.isFavorite? favoriteOffImg : favoriteOnImg"
+                    :src="item.isFavorite? favoriteOnImg : favoriteOffImg"
                     />
                 </div>
                 <div class="card-right" @click="goDetail(item.menuId)"> 
@@ -36,15 +36,8 @@
 
     export default {
         created() {
-            for (let index = 0; index < this.restaurantList.length; index++) {
-                const data = this.restaurantList[index];
-        
-                if (this.$store.state.favoriteList.indexOf(data.menuId) != -1) {
-                    data.isFavorite = true;
-                }
-            }
             this.addScrollEvent();
-            this.getRestaurantList();
+            this.getMenuList();
         },
         destroyed() {
             this.removeScrollEvent();
@@ -56,7 +49,7 @@
             return{
                 favoriteOffImg : require('../assets/icon_favorite_off.svg'),
                 favoriteOnImg : require('../assets/icon_favorite_on.svg'),
-                restaurantList : [
+                menuList : [
                   {
                     menuId : '',
                     restaurantName : '',
@@ -67,7 +60,8 @@
                     price : 0,
                     isFavorite: false
                   }
-                ],menuList : [
+                ],
+                headerList : [
                   { menuName : '식당등록', pathName: 'RestaurantCreate' },
                   { menuName : '고객센터', pathName: 'CS' }
                 ],
@@ -90,7 +84,6 @@
             likeClick(data){
                 data.isFavorite = !data.isFavorite;
                 
-                // console.log('err');
                 if (data.isFavorite) {
                     this.$store.commit("addFavoriteRes", data.menuId);
                 } else {
@@ -101,12 +94,12 @@
             goDetail(id){
                 this.$router.push({ name : "MenuDetail" , params:{menuId : id}})
             },
-            getRestaurantList() {
+            getMenuList() {
                 // 페이지 증가
                 this.pageNumber++;
 
                 if(this.pageNumber == 1){
-                    this.restaurantList = [];
+                    this.menuList = [];
                 }
 
                 let params = {
@@ -115,25 +108,38 @@
                 }
 
                 // restaurant 리스트 불러오기
-                this.$api.restaurantList(params)
+                this.$api.menuList(params)
                 .then(response => {
                     if(response.data.errCode == 200) {
-                        let result = response.data.restaurantList;
+                        let result = response.data.menuList;
 
                         // 더보기 할 때 object 병합
-                        let origin = this.restaurantList;
-                        this.restaurantList = [];
-                        this.restaurantList = origin.concat(result);
+                        let origin = this.menuList;
+                        this.menuList = [];
+                        this.menuList = origin.concat(result);
 
                         // 더보기 가능한 restaurant 존재 여부 저장
                         if (result.length < this.pageSize) {
                             this.isMorePost = false;
                         }
+
+                        // 좋아요 리스트 가져오기
+                        this.getFavoriteList()
                     }
                 })
                 .catch(error => {
                     console.log('error : ',error)
                 })
+            },
+            getFavoriteList(){
+                for (let index = 0; index < this.menuList.length; index++) {
+            
+                    if (this.$store.state.favoriteList.indexOf(this.menuList[index].menuId) != -1) {
+                        this.$set(this.menuList[index], 'isFavorite', true)
+                    }else{
+                        this.$set(this.menuList[index], 'isFavorite', false)
+                    }
+                }
             },
             // 스크롤이 bottom 에 도달여부 체크
             bottomVisible() {
@@ -147,8 +153,8 @@
             // 스크롤이 바닥에 도달하기 전에 더보기 이벤트 제거
             addScrollEvent() {
                 window.addEventListener("scroll", () => {
-                // restaurantList 가 있고, 더 불러올 post가 있을 때
-                    if (this.restaurantList.length > 0 && this.isMorePost) {
+                // menuList 가 있고, 더 불러올 post가 있을 때
+                    if (this.menuList.length > 0 && this.isMorePost) {
                         this.bottomYN = this.bottomVisible();
                     }
                 });
@@ -165,7 +171,7 @@
         watch:{
             bottomYN(val) {
                 if (val) {
-                    this.getRestaurantList();
+                    this.getMenuList();
                 }
             }
         }
