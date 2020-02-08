@@ -16,12 +16,20 @@ const API = {
     let url = `${API_URL}/api/menudetail`
 
     return axios.get(url, { params: request })
-  }
+  },
   // 4. 메뉴 상세
 
   // 5. 메뉴 수정
 
-  // 6. 
+  // 6. 식당 등록
+  createRestaurant (request) {
+    let url = `${API_URL}/api/restaurant`
+    let headers = { 
+      'Content-Type': 'multipart/form-data'
+    }
+
+    return axios.post(url, request, { headers: headers })
+  }
 }
 
 export default API
