@@ -74,6 +74,7 @@ export default {
       this.isFavorite = true;
     }
     this.getMenuDetail(this.menuId)
+    this.getGeoInfo(this)
   },
   components: {
     HeaderBar
@@ -100,14 +101,16 @@ export default {
       restaurantPhone: "02-2361-3345",
       isFavorite: false,
       menuId: "1",
-      gpsX: undefined,
-      gpsY: undefined,
+      gpsX: 0,
+      gpsY: 0,
       // slides: ["https://picsum.photos/1024/480/?image=12", "https://picsum.photos/1024/480/?image=22", "https://picsum.photos/1024/480/?image=10"],
       menuList: [
         { menuName : '메뉴수정', pathName: 'MenuUpdate' },
         { menuName : '신고하기', pathName: 'CS' }, // Todo 신고하기 path 지정 필요
         { menuName : '고객센터', pathName: 'CS' }
-      ]
+      ],
+      geoX: 0,
+      geoY: 0
     };
   },
   computed: {
@@ -119,7 +122,7 @@ export default {
       }
     },
     slides: function() {
-      if(this.menuImage) {
+      if(this.isCompleted) {
         let tempArray = [
           this.menuImage,
           this.restaurantImage1,
@@ -127,14 +130,15 @@ export default {
           this.restaurantImage3,
           this.restaurantImage4
         ]
+
         let resArray = []
-        
-        for(let image in tempArray) {
-          if(image) {
-            resArray.push(image)
+        tempArray.forEach((value) => {
+          console.log('value : ', value)
+          if(value) {
+            resArray.push(value)
           }
-        }
-        
+        })
+
         return resArray
       } else {
         return [
@@ -155,7 +159,9 @@ export default {
     },
     distance: function() {
       if(this.gpsX) {
-        return '거리'
+        let targetX = this.gpsX
+        let targetY = this.gpsY
+        return this.getDistance(this.geoX, this.geoY, targetX, targetY, 'M')
       } else {
         return '알수없음'
       }
@@ -178,7 +184,6 @@ export default {
 
       this.$api.menuDetail(params)
       .then(response => {
-        console.log('response : ', response)
         switch(response.data.errCode) {
           case 200: {
             this.mapResult(response.data)
@@ -202,71 +207,56 @@ export default {
     },
     mapResult: function(result) {
       this.price = result.price,
-      this.menuImage = result.menu_image,
+      this.menuImage = result.menuImage,
       this.contents = result.contents,
-      this.menuType = result.menu_type,
-      this.startDate = result.start_date,
-      this.endDate = result.end_date,
-      this.restaurantName = result.restaurant_name,
-      this.restaurantAddress = result.restaurant_address,
-      this.restaurantPhone = result.restaurant_phone,
-      this.operationTime = result.operation_time,
-      this.restaurantImage1 = result.restaurant_image_1,
-      this.restaurantImage2 = result.restaurant_image_2,
-      this.restaurantImage3 = result.restaurant_image_3,
-      this.restaurantImage4 = result.restaurant_image_4,
-      this.restaurantId = result.restaurant_id,
-      this.gpsX = result.gps_x,
-      this.gpsY = result.gps_y,
+      this.menuType = result.menuType,
+      this.startDate = result.startDate,
+      this.endDate = result.endDate,
+      this.restaurantName = result.restaurantName,
+      this.restaurantAddress = result.restaurantAddress,
+      this.restaurantPhone = result.restaurantPhone,
+      this.operationTime = result.operationTime,
+      this.restaurantImage1 = result.restaurantImage1,
+      this.restaurantImage2 = result.restaurantImage2,
+      this.restaurantImage3 = result.restaurantImage3,
+      this.restaurantImage4 = result.restaurantImage4,
+      this.restaurantId = result.restaurantId,
+      this.gpsX = Number(result.gpsX),
+      this.gpsY = Number(result.gpsY),
       this.isCompleted = true
     },
-    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    //:::                                                                         :::
-    //:::  This routine calculates the distance between two points (given the     :::
-    //:::  latitude/longitude of those points). It is being used to calculate     :::
-    //:::  the distance between two locations using GeoDataSource (TM) prodducts  :::
-    //:::                                                                         :::
-    //:::  Definitions:                                                           :::
-    //:::    South latitudes are negative, east longitudes are positive           :::
-    //:::                                                                         :::
-    //:::  Passed to function:                                                    :::
-    //:::    lat1, lon1 = Latitude and Longitude of point 1 (in decimal degrees)  :::
-    //:::    lat2, lon2 = Latitude and Longitude of point 2 (in decimal degrees)  :::
-    //:::    unit = the unit you desire for results                               :::
-    //:::           where: 'M' is statute miles (default)                         :::
-    //:::                  'K' is kilometers                                      :::
-    //:::                  'N' is nautical miles                                  :::
-    //:::                                                                         :::
-    //:::  Worldwide cities and other features databases with latitude longitude  :::
-    //:::  are available at https://www.geodatasource.com                         :::
-    //:::                                                                         :::
-    //:::  For enquiries, please contact sales@geodatasource.com                  :::
-    //:::                                                                         :::
-    //:::  Official Web site: https://www.geodatasource.com                       :::
-    //:::                                                                         :::
-    //:::               GeoDataSource.com (C) All Rights Reserved 2018            :::
-    //:::                                                                         :::
-    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
+    getGeoInfo: function(that) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition (function(pos) {
+          that.geoX = pos.coords.latitude;
+          that.geoY = pos.coords.longitude;
+        });
+      } else {
+          alert("이 브라우저에서는 Geolocation이 지원되지 않습니다.")
+      }
+    },
     getDistance: function(lat1, lon1, lat2, lon2, unit) {
       if ((lat1 == lat2) && (lon1 == lon2)) {
         return 0;
       }
       else {
-        var radlat1 = Math.PI * lat1/180;
-        var radlat2 = Math.PI * lat2/180;
-        var theta = lon1-lon2;
-        var radtheta = Math.PI * theta/180;
-        var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-        if (dist > 1) {
-          dist = 1;
-        }
+        let radlat1 = Math.PI * lat1/180;
+        let radlat2 = Math.PI * lat2/180;
+        let theta = lon1-lon2;
+        let radtheta = Math.PI * theta/180;
+        let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+
         dist = Math.acos(dist);
         dist = dist * 180/Math.PI;
         dist = dist * 60 * 1.1515;
-        if (unit=="K") { dist = dist * 1.609344 }
+        if (unit=="M") { dist = dist * 1.609344 * 1000}
         if (unit=="N") { dist = dist * 0.8684 }
-        return dist;
+
+        if(dist > 1000) {
+          return `${(dist / 1000).toFixed(1)}K 이내`
+        } else {
+          return `${dist.toFixed(0)}M 이내`
+        }
       }
     }
   },
@@ -275,7 +265,7 @@ export default {
       return startDate + " ~ " + endDate;
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

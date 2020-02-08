@@ -35,7 +35,7 @@ const router = new Router({
             component: RestaurantCreate
         },
         { 
-            path: "/menudetail/:restaurantId",
+            path: "/menudetail/:menuId",
             name: "MenuDetail",
             component: MenuDetail
         },
