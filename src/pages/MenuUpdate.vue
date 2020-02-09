@@ -6,9 +6,12 @@
         <img :src="menuImage" class="menu-img"/>
       </div>
       <div class="menu-type-bar">
-        <div class="type-day menu-type" :style="menuType=='01'? 'background:#CF5252; color:white;' : ''">매일</div>
-        <div class="type-week menu-type" :style="menuType=='02'? 'background:#CF5252; color:white;' : ''">주간</div>
-        <div class="type-month menu-type" :style="menuType=='03'? 'background:#CF5252; color:white;' : ''">월간</div>
+          <input type="radio" id="type-day"   name="menu-type" value="01" v-model="menuType"> 
+          <label for="type-day"><div>매일</div></label>
+          <input type="radio" id="type-week"  name="menu-type" value="02" v-model="menuType">
+          <label for="type-week"><div>주간</div></label>
+          <input type="radio" id="type-month" name="menu-type" value="03" v-model="menuType">
+          <label for="type-month"><div>월간</div></label>
       </div>
       <div class="menu-input">
         <div class="start-date">
@@ -72,27 +75,6 @@
     updated(){
       // console.log(5, this.endDate, '/', this.startDate)
     },
-    watch:{
-      startDate(newVal){
-
-        // menuType 에 따른 endDate 구하기
-        if      (this.menuType == '02') {    // menutype 주간
-          this.getSaterday(newVal)  
-        }else if(this.menuType == '03') {   // menutype 월간                         
-            newVal = newVal.replace(/-/gi, ""); 
-
-            let year    = newVal.substring(0, 4);
-            let month   = newVal.substring(4, 6);
-            let lastDay = new Date(year, month, 0).getDate();
-
-          this.endDate =  year + '-' + month + '-' + lastDay
-        }
-
-      }
-    },
-    components:{
-      HeaderBar
-    },
     data() {
       return{
         menuId: "1",
@@ -120,9 +102,9 @@
               this.menuImage = response.data.menuImage
               this.contents = response.data.contents
               // this.menuType = response.data.menuType
-              this.menuType = '03' // 임시
+              this.menuType = '01' // 임시
               this.startDate = response.data.startDate
-              this.endDatec= response.data.endDate
+              this.endDate= response.data.endDate
               this.restaurantId = response.data.restaurantId
             }
           })
@@ -157,25 +139,58 @@
         console.log('date', date)
 
         let year    = date.substring(0, 4);
-        let month   = date.substring(4, 6);
+        let mm      = date.substring(4, 6);
         let day     = date.substring(6, 8);
-        let vn_day1 = new Date( year, month-1, day );
+        let vn_day1 = new Date( year, mm-1, day );
 
         let dayOfWeek = vn_day1.getDay();         // 현재 요일 ( 0:일, 1:월, 2:화, 3:수, 4:목, 5:금, 6:토 )
 
-        let saturday = 0;
+        let dayNum = 0;
         if ((dayOfWeek > 0) && (dayOfWeek < 7)) { // 현재 요일이 월~토 일때
-          saturday = 6 - dayOfWeek;
+          dayNum = 6 - dayOfWeek;
         }else{                                    // 현재 요일이 일요일
-          saturday = 6
+          dayNum = 6
         }
 
-        let Cal_en = new Date( year, month-1, vn_day1.getDate() + saturday ); // 해당일자 주간의 토요일
-        this.endDate = year + '-' + month + '-' + Cal_en.getDate() 
-
-        console.log('dayOfWeek', dayOfWeek  )
-        console.log('Cal_en.getDate()', Cal_en.getDate())
+        let saturday = new Date( year, mm-1, vn_day1.getDate() + dayNum ); // 해당일자 주간의 토요일
+        let dd = saturday.getDate().toString();
+        this.endDate = year + '-' + mm + '-' + (dd[1]?dd:"0"+dd[0]);
       },
+      // menuType 에 따른 endDate 구하기
+      getEndDate(){
+        if(this.menuType == '01'){
+         
+          this.endDate = this.startDate;
+
+        }else if(this.menuType == '02') {    // menutype 주간
+          
+          this.getSaterday(this.startDate)  
+
+        }else if(this.menuType == '03') {   // menutype 월간                         
+          
+          let day = this.startDate.replace(/-/gi, ""); 
+
+          let year = day.substring(0, 4);
+          let mm   = day.substring(4, 6);
+          let dd   = new Date(year, mm, 0).getDate().toString();
+
+          this.endDate =  year + '-' + mm + '-' + (dd[1]?dd:"0"+dd[0]);
+          
+        }else{
+          this.endDate = this.startDate;
+        }
+      }
+    },
+    watch:{
+      startDate(){
+        this.getEndDate();
+      },
+      menuType(){
+        this.getEndDate();
+      }
+    },
+    components:{
+      HeaderBar
     },
     filters: {
       menuTypeFilter: codeFilter.menuType
@@ -222,27 +237,7 @@
       }
     }
     .menu-type-bar{
-      width: 181px;
-      height: 42px;
-      text-align: center;
-      .menu-type{
-        width: 60px;
-        height: 42px;
-        padding: 4px 0 ;
-        margin:13px 0;
-        float: left;
-        border: 1px solid #CF5252;
-        font-size : 22px;
-        color:#CF5252;
-      }
-      .type-day{
-        border-radius: 19px 0 0 19px;
-        border-right: none;
-      }
-      .type-month{
-        border-radius: 0 19px 19px 0;
-        border-left: none;
-      }
+      margin: 13px 0;
     }
     .menu-input{
       clear: both;
@@ -362,6 +357,102 @@
 
   }
 
-  
+// radio custom : start
+
+  [type="radio"]:checked,
+  [type="radio"]:not(:checked) {
+      position: absolute;
+      left: -9999px;
+  }
+
+  #type-day:not(:checked) + label div{
+    border-radius: 19px 0 0 19px !important;
+    border-right: none !important;
+  }
+
+  #type-day:checked + label div{
+    border-radius: 19px 0 0 19px !important;
+    border-right: none !important;
+  }
+
+  #type-month:not(:checked) + label div{
+    border-radius: 0 19px 19px 0;
+    border-left: none;
+  }
+
+  #type-month:checked + label div{
+    border-radius: 0 19px 19px 0;
+    border-left: none;
+  }
+
+  [type="radio"]:checked + label div
+  {
+      position: relative;
+      cursor: pointer;
+      line-height: 20px;
+      display: inline-block;
+      color: white;
+      background: #CF5252; 
+      width: 60px;
+      height: 42px;
+      line-height: 42px;
+      font-size: 22px;
+      text-align: center;
+      border: 1px solid #CF5252;
+  }
+  [type="radio"]:not(:checked) + label div
+  {
+      position: relative;
+      cursor: pointer;
+      line-height: 20px;
+      display: inline-block;
+      color: #CF5252;
+      width: 60px;
+      height: 42px;
+      line-height: 42px;
+      font-size: 22px;
+      text-align: center;
+      border: 1px solid #CF5252;
+  }
+  [type="radio"]:checked + label:before,
+  [type="radio"]:not(:checked) + label:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 60px;
+      height: 42px;
+      padding: 4px 0;
+      float: left;
+      border: 1px solid #CF5252;
+      color: #CF5252;
+  }
+  [type="radio"]:checked + label:after,
+  [type="radio"]:not(:checked) + label:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: #CF5252;
+      width: 60px;
+      height: 42px;
+      float: left;
+      border: 1px solid #CF5252;
+      font-size: 22px;
+      color: white;
+  }
+  // [type="radio"]:not(:checked) + label:after {
+  //     opacity: 0;
+  //     -webkit-transform: scale(0);
+  //     transform: scale(0);
+  // }
+  // [type="radio"]:checked + label:after {
+  //     opacity: 1;
+  //     -webkit-transform: scale(1);
+  //     transform: scale(1);
+  // }
+
+// radio custom : end
+
 }
 </style>
