@@ -38,6 +38,7 @@
         created() {
             this.addScrollEvent();
             this.getMenuList();
+            this.getGeoInfo(this);
         },
         destroyed() {
             this.removeScrollEvent();
@@ -58,17 +59,20 @@
                     lunchOperationTime : '',
                     distance : '',
                     price : 0,
-                    isFavorite: false
+                    isFavorite: false,
+                    geoX: 0,
+                    geoY: 0
                   }
                 ],
                 headerList : [
                   { menuName : '식당등록', pathName: 'RestaurantCreate' },
                   { menuName : '고객센터', pathName: 'CS' }
                 ],
-                pageCnt : 5,
+                pageCnt : 10,
                 pageNumber: 0,
                 bottomYN: false,
                 isMorePost: true,
+                      
             }
         },
         filters:{
@@ -167,11 +171,56 @@
                     }
                 });
             },
+            getGeoInfo(that) {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition (function(pos) {
+                    that.geoX = pos.coords.latitude;
+                    that.geoY = pos.coords.longitude;
+                    });
+                } else {
+                    alert("이 브라우저에서는 Geolocation이 지원되지 않습니다.")
+                }
+            },
+            getDistance(lat1, lon1, lat2, lon2, unit) {
+                if ((lat1 == lat2) && (lon1 == lon2)) {
+                    return 0;
+                }
+                else {
+                    let radlat1 = Math.PI * lat1/180;
+                    let radlat2 = Math.PI * lat2/180;
+                    let theta = lon1-lon2;
+                    let radtheta = Math.PI * theta/180;
+                    let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+
+                    dist = Math.acos(dist);
+                    dist = dist * 180/Math.PI;
+                    dist = dist * 60 * 1.1515;
+                    if (unit=="M") { dist = dist * 1.609344 * 1000}
+                    if (unit=="N") { dist = dist * 0.8684 }
+
+                    if(dist > 1000) {
+                    return `${(dist / 1000).toFixed(1)}K 이내`
+                    } else {
+                    return `${dist.toFixed(0)}M 이내`
+                    }
+                }
+            }
         },
         watch:{
             bottomYN(val) {
                 if (val) {
                     this.getMenuList();
+                }
+            }
+        },
+        computed:{
+            distance(){
+                if(this.gpsX) {
+                    let targetX = this.gpsX
+                    let targetY = this.gpsY
+                    return this.getDistance(this.geoX, this.geoY, targetX, targetY, 'M')
+                } else {
+                    return '알수없음'
                 }
             }
         }
