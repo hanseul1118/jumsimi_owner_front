@@ -6,12 +6,12 @@
         <img :src="menuImage" class="menu-img"/>
       </div>
       <div class="menu-type-bar">
-          <input type="radio" id="type-day"   name="menu-type" value="01" v-model="menuType"> 
-          <label for="type-day"><div>매일</div></label>
-          <input type="radio" id="type-week"  name="menu-type" value="02" v-model="menuType">
-          <label for="type-week"><div>주간</div></label>
-          <input type="radio" id="type-month" name="menu-type" value="03" v-model="menuType">
-          <label for="type-month"><div>월간</div></label>
+        <input type="radio" id="type-day"   name="menu-type" value="01" v-model="menuType"> 
+        <label for="type-day">  <div>매일</div></label>
+        <input type="radio" id="type-week"  name="menu-type" value="02" v-model="menuType">
+        <label for="type-week"> <div>주간</div></label>
+        <input type="radio" id="type-month" name="menu-type" value="03" v-model="menuType">
+        <label for="type-month"><div>월간</div></label>
       </div>
       <div class="menu-input">
         <div class="start-date">
