@@ -127,7 +127,6 @@
 </script>
 
 <style lang="scss" scoped>
-@import url('https://fonts.googleapis.com/css?family=Hi+Melody&display=swap');
 
   .restaurant-create-container {
 

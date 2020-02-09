@@ -83,7 +83,7 @@
 
   export default {
     created() {
-      this.menuId = this.$route.params.restaurantId
+      this.menuId = this.$route.params.menuId
 
       this.getMenuDetail(this.menuId)
     },
@@ -335,6 +335,7 @@
       border: none;
       color: white;
       font-size: 38px;
+      font-family: 'Hi Melody', cursive;
     }
 
   }

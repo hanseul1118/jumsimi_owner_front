@@ -40,7 +40,7 @@ const router = new Router({
             component: MenuDetail
         },
         { 
-            path: "/menuupdate/:restaurantId",
+            path: "/menuupdate/:menuId",
             name: "MenuUpdate",
             component: MenuUpdate
         },

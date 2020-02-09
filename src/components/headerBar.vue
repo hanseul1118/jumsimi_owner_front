@@ -56,16 +56,17 @@
             },
             emitFuncion(pathName){
               if(this.passedMenuId) {
+                console.log(' this.passedMenuId',  this.passedMenuId)
                 this.$router.push({name: pathName, props: { menuId:  this.passedMenuId}})
+              }else{
+                this.$router.push({name:pathName})
               }
-              this.$router.push({name:pathName})
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-@import url("https://fonts.googleapis.com/css?family=Hi+Melody&display=swap");
 
 .header-menu-container {
   position: relative;
@@ -122,6 +123,7 @@
       color: #707070;
       font-size: 23px;
       padding: 13px 38px;
+      cursor: pointer;
       img {
         width: 7px;
         padding-bottom: 6px;
