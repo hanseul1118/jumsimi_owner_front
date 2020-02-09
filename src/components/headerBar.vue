@@ -1,21 +1,23 @@
 <template>
   <div class="header-menu-container">
-    <div class="header-top">
-      <div class="back-btn" @click="goBack()" v-show="type == 1 || type == 3">
-        뒤로
+    <div class="header-menu-inner">
+      <div class="header-top">
+        <div class="back-btn" @click="goBack()" v-show="type == 1 || type == 3">
+          뒤로
+        </div>
+        <div class="header-txt" @click="goRestaurantList()">
+          점심이
+        </div>
+        <div v-show="type == 2 || type == 3" class="header-menu-img-container">
+          <img src="@/assets/icon_header_menu.svg" @click="menuClick = !menuClick" />
+        </div>
       </div>
-      <div class="header-txt">
-        점심이
-      </div>
-      <div v-show="type == 2 || type == 3" class="header-menu-img-container">
-        <img src="@/assets/icon_header_menu.svg" @click="menuClick = !menuClick" />
-      </div>
-    </div>
-    <div v-show="(type == 2 || type == 3) && menuClick" class="header-menu">
-      <div>
-        <div v-for="(item, index) in menuList" :key="index" class="header-sub-menu" @click="emitFuncion(item.pathName)">
-          <img src="@/assets/menu_dot.png" />
-          {{ item.menuName }}
+      <div v-show="(type == 2 || type == 3) && menuClick" class="header-menu">
+        <div>
+          <div v-for="(item, index) in menuList" :key="index" class="header-sub-menu" @click="emitFuncion(item.pathName)">
+            <img src="@/assets/menu_dot.png" />
+            {{ item.menuName }}
+          </div>
         </div>
       </div>
     </div>
@@ -54,6 +56,9 @@
             goBack(){
                 history.go(-1);
             },
+            goRestaurantList(){
+              this.$router.push({name: 'RestaurantList'})
+            },
             emitFuncion(pathName){
               if(this.passedMenuId) {
                 console.log(' this.passedMenuId',  this.passedMenuId)
@@ -69,11 +74,22 @@
 <style lang="scss" scoped>
 
 .header-menu-container {
-  position: relative;
+    position: relative;
+    height: 58px;
+
+  .header-menu-inner{
+    position: fixed;
+    background-color: white;
+    width: 100%;
+    z-index: 101;
+    height: 58px;
+  }
 
   .header-top {
     border-bottom: 1px solid #cccccc;
     height: 58px;
+
+
     .back-btn {
       position: absolute;
       top: 17px;
@@ -88,6 +104,9 @@
       text-align: center;
       color: #f65130;
       font-family: "Hi Melody", cursive;
+      cursor: pointer;
+      width: fit-content;
+      margin: auto;
     }
     .header-edit {
       position: absolute;
