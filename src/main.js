@@ -9,6 +9,7 @@ import API from '@/api/api.js'
 import BootstrapVue from 'bootstrap-vue/dist/bootstrap-vue.esm'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import vuetify from '@/plugins/vuetify'
 
 Vue.use(BootstrapVue)
 
@@ -25,7 +26,10 @@ new Vue({
   store,
   components: { App },
   template: '<App/>',
+  vuetify,
+
   beforeCreate() {
     this.$store.commit('initializeStore');
   }
 })
+
