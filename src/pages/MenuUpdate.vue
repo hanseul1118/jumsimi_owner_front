@@ -6,61 +6,43 @@
         <img :src="menuImage" class="menu-img"/>
       </div>
       <div class="menu-type-bar">
-        <div class="type-day menu-type">매일</div>
-        <div class="type-week menu-type">주간</div>
-        <div class="type-month menu-type">월간</div>
+        <div class="type-day menu-type" :style="menuType=='01'? 'background:#CF5252; color:white;' : ''">매일</div>
+        <div class="type-week menu-type" :style="menuType=='02'? 'background:#CF5252; color:white;' : ''">주간</div>
+        <div class="type-month menu-type" :style="menuType=='03'? 'background:#CF5252; color:white;' : ''">월간</div>
       </div>
       <div class="menu-input">
         <div class="start-date">
           <div class="date-label">시작일</div>
-
-  <v-app>
-
-            <v-row justify="center">
-              <!-- <v-col> -->
-                <v-menu
-                  ref="menu"
-                  v-model="menu"
-                  :close-on-content-click="false"
-                  :return-value.sync="startDate"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="startDate"
-                        readonly
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker v-model="startDate" no-title scrollable color="#CF5252">
-                    <v-spacer></v-spacer>
-                    <v-btn text color="#CF5252" @click="menu = false">취소</v-btn>
-                    <v-btn text color="#CF5252" @click="$refs.menu.save(startDate)">확인</v-btn>
-                  </v-date-picker>
-                </v-menu>
-              <!-- </v-col> -->
-            </v-row>
-
-  </v-app>
-
-
-
-
-
-
-
-
-
-
-
-
-
+            <v-app>
+              <v-row justify="center">
+                  <v-menu
+                    ref="menu"
+                    v-model="menu"
+                    :close-on-content-click="false"
+                    :return-value.sync="startDate"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="290px"
+                  >
+                    <template v-slot:activator="{ on }">
+                      <v-text-field
+                        v-model="startDate"
+                          readonly
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker v-model="startDate" no-title scrollable color="#CF5252">
+                      <v-spacer></v-spacer>
+                      <v-btn text color="#CF5252" @click="menu = false">취소</v-btn>
+                      <v-btn text color="#CF5252" @click="$refs.menu.save(startDate)">확인</v-btn>
+                    </v-date-picker>
+                  </v-menu>
+              </v-row>
+            </v-app>
         </div>
         <div class="end-date">
           <div class="date-label">종료일</div>
-          <input v-model="endDate" disabled> 
+          <input :value="endDate" disabled> 
         </div>
         <div class="menu-price">
           <input class="price-input" v-model="price">
@@ -78,8 +60,8 @@
 </template>
 
 <script>
-
   import HeaderBar from "@/components/headerBar"
+  import codeFilter from '../js/codeFilter.js'
 
   export default {
     created() {
@@ -91,10 +73,22 @@
       // console.log(5, this.endDate, '/', this.startDate)
     },
     watch:{
-      // endDate(oldVal, newVal){
-      //   console.log("oldVal : " , oldVal)
-      //   console.log("newVal : " ,newVal)
-      // }
+      startDate(newVal){
+
+        // menuType 에 따른 endDate 구하기
+        if      (this.menuType == '02') {    // menutype 주간
+          this.getSaterday(newVal)  
+        }else if(this.menuType == '03') {   // menutype 월간                         
+            newVal = newVal.replace(/-/gi, ""); 
+
+            let year    = newVal.substring(0, 4);
+            let month   = newVal.substring(4, 6);
+            let lastDay = new Date(year, month, 0).getDate();
+
+          this.endDate =  year + '-' + month + '-' + lastDay
+        }
+
+      }
     },
     components:{
       HeaderBar
@@ -121,15 +115,14 @@
           
           this.$api.menuDetail(params)
           .then(response => {
-            console.log('response : ', response)
-            console.log(3)
             if(response.data.errCode == 200) {
-              this.price = response.data.price,
-              this.menuImage = response.data.menuImage,
-              this.contents = response.data.contents,
-              this.menuType = response.data.menuType,
-              this.startDate = response.data.startDate,
-              this.endDate = response.data.endDate,
+              this.price = response.data.price
+              this.menuImage = response.data.menuImage
+              this.contents = response.data.contents
+              // this.menuType = response.data.menuType
+              this.menuType = '03' // 임시
+              this.startDate = response.data.startDate
+              this.endDatec= response.data.endDate
               this.restaurantId = response.data.restaurantId
             }
           })
@@ -158,9 +151,35 @@
         .catch(error => {
           console.log('error : ' , error)
         })
-      }
-    }
-    // filters: {
+      },
+      getSaterday(date){
+        date = date.replace(/-/gi, ""); 
+        console.log('date', date)
+
+        let year    = date.substring(0, 4);
+        let month   = date.substring(4, 6);
+        let day     = date.substring(6, 8);
+        let vn_day1 = new Date( year, month-1, day );
+
+        let dayOfWeek = vn_day1.getDay();         // 현재 요일 ( 0:일, 1:월, 2:화, 3:수, 4:목, 5:금, 6:토 )
+
+        let saturday = 0;
+        if ((dayOfWeek > 0) && (dayOfWeek < 7)) { // 현재 요일이 월~토 일때
+          saturday = 6 - dayOfWeek;
+        }else{                                    // 현재 요일이 일요일
+          saturday = 6
+        }
+
+        let Cal_en = new Date( year, month-1, vn_day1.getDate() + saturday ); // 해당일자 주간의 토요일
+        this.endDate = year + '-' + month + '-' + Cal_en.getDate() 
+
+        console.log('dayOfWeek', dayOfWeek  )
+        console.log('Cal_en.getDate()', Cal_en.getDate())
+      },
+    },
+    filters: {
+      menuTypeFilter: codeFilter.menuType
+
     // formatPrice: function(price) {
     //   console.log("price : " ,price)
     //   let point, len, str ;
@@ -181,7 +200,7 @@
 
     //   return str;
     // }
-  // }
+    }
   };
 </script>
 
@@ -305,6 +324,9 @@
       }
       .v-input__slot{
         margin:0px;
+      }
+      .v-menu__content.theme--light.menuable__content__active{
+        top: 550px !important;
       }
       // date-picker custom : end
     }
