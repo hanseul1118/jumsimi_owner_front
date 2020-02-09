@@ -56,9 +56,11 @@
             },
             emitFuncion(pathName){
               if(this.passedMenuId) {
+                console.log(' this.passedMenuId',  this.passedMenuId)
                 this.$router.push({name: pathName, props: { menuId:  this.passedMenuId}})
+              }else{
+                this.$router.push({name:pathName})
               }
-              this.$router.push({name:pathName})
             }
         }
     }
@@ -122,6 +124,7 @@
       color: #707070;
       font-size: 23px;
       padding: 13px 38px;
+      cursor: pointer;
       img {
         width: 7px;
         padding-bottom: 6px;

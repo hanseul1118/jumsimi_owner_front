@@ -83,7 +83,7 @@
 
   export default {
     created() {
-      this.menuId = this.$route.params.restaurantId
+      this.menuId = this.$route.params.menuId
 
       this.getMenuDetail(this.menuId)
     },
