@@ -283,6 +283,30 @@
           padding-right: 19px;
         }
       }
+
+      // date-picker custom : start
+      .v-application--wrap{
+        min-height: auto !important;
+      }
+      .v-text-field{
+        padding-top: 0px;
+        margin-top: 0px;
+      }
+      .v-text-field__details{
+        height: 0px;
+        min-height: 0px;
+      }
+      .theme--light.v-text-field>.v-input__control>.v-input__slot:before{
+        border-color: transparent;
+      }
+      .row{
+        margin-right: 0px;
+        margin-left: 0px;
+      }
+      .v-input__slot{
+        margin:0px;
+      }
+      // date-picker custom : end
     }
     .menu-textarea{
       textarea{
@@ -315,33 +339,6 @@
 
   }
 
-  .v-application--wrap{
-    min-height: auto !important;
-  }
-  .col-sm-6{
-    padding: 0px;
-  }
-  .v-text-field{
-    padding-top: 0px;
-    margin-top: 0px;
-  }
-  .v-text-field__details{
-    height: 0px;
-    min-height: 0px;
-  }
-  .v-messages.theme--light{
-    height: 0px;
-    min-height: 0px;
-  }
-  .theme--light.v-text-field>.v-input__control>.v-input__slot:before{
-    border-color: transparent;
-  }
-  .row{
-    margin-right: 0px;
-    margin-left: 0px;
-  }
-  .v-input__slot{
-    margin:0px;
-  }
+  
 }
 </style>
