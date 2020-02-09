@@ -13,11 +13,54 @@
       <div class="menu-input">
         <div class="start-date">
           <div class="date-label">시작일</div>
-          <input v-model="startDate"> 
+
+  <v-app>
+
+            <v-row justify="center">
+              <!-- <v-col> -->
+                <v-menu
+                  ref="menu"
+                  v-model="menu"
+                  :close-on-content-click="false"
+                  :return-value.sync="startDate"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      v-model="startDate"
+                        readonly
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker v-model="startDate" no-title scrollable color="#CF5252">
+                    <v-spacer></v-spacer>
+                    <v-btn text color="#CF5252" @click="menu = false">취소</v-btn>
+                    <v-btn text color="#CF5252" @click="$refs.menu.save(startDate)">확인</v-btn>
+                  </v-date-picker>
+                </v-menu>
+              <!-- </v-col> -->
+            </v-row>
+
+  </v-app>
+
+
+
+
+
+
+
+
+
+
+
+
+
         </div>
         <div class="end-date">
           <div class="date-label">종료일</div>
-          <input v-model="endDate"> 
+          <input v-model="endDate" disabled> 
         </div>
         <div class="menu-price">
           <input class="price-input" v-model="price">
@@ -82,12 +125,12 @@
             console.log(3)
             if(response.data.errCode == 200) {
               this.price = response.data.price,
-              this.menuImage = response.data.menu_image,
+              this.menuImage = response.data.menuImage,
               this.contents = response.data.contents,
-              this.menuType = response.data.menu_type,
-              this.startDate = response.data.start_date,
-              this.endDate = response.data.end_date,
-              this.restaurantId = response.data.restaurant_id
+              this.menuType = response.data.menuType,
+              this.startDate = response.data.startDate,
+              this.endDate = response.data.endDate,
+              this.restaurantId = response.data.restaurantId
             }
           })
           .catch(error => {
@@ -185,7 +228,7 @@
     .menu-input{
       clear: both;
       
-      .start-date , .end-date{
+      .start-date{
         clear: both;
         border-bottom: 1px solid #D9D8D8;
         padding: 11px 0 ;
@@ -196,7 +239,20 @@
           letter-spacing: 3px;
           line-height: 33px;
           font-size : 20px; 
-
+        }
+      }
+      .end-date{
+        clear: both;
+        border-bottom: 1px solid #D9D8D8;
+        padding: 11px 0 ;
+        input{
+          border:none;
+          width: calc(100% - 95px);
+          text-align: center;
+          letter-spacing: 3px;
+          line-height: 33px;
+          font-size : 20px; 
+          color: #999;
         }
       }
       .date-label{
@@ -216,6 +272,7 @@
           font-size: 20px;
           padding-left: 19px;
           letter-spacing: 3px;
+          text-align: right;
         }
         .won{
           width:50px;
@@ -226,6 +283,30 @@
           padding-right: 19px;
         }
       }
+
+      // date-picker custom : start
+      .v-application--wrap{
+        min-height: auto !important;
+      }
+      .v-text-field{
+        padding-top: 0px;
+        margin-top: 0px;
+      }
+      .v-text-field__details{
+        height: 0px;
+        min-height: 0px;
+      }
+      .theme--light.v-text-field>.v-input__control>.v-input__slot:before{
+        border-color: transparent;
+      }
+      .row{
+        margin-right: 0px;
+        margin-left: 0px;
+      }
+      .v-input__slot{
+        margin:0px;
+      }
+      // date-picker custom : end
     }
     .menu-textarea{
       textarea{
@@ -257,5 +338,7 @@
     }
 
   }
+
+  
 }
 </style>
