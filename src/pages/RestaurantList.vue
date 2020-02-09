@@ -22,7 +22,7 @@
                     <div class="restaurant-price">{{item.price | priceFilter}}</div>
                     <div class="restaurant-bottom">
                         <div class="restaurant-lunch-time">점심시간 {{item.lunchOperationTime}}</div>
-                        <div class="restaurant-distance">{{item.distance}}</div>
+                        <!-- <div class="restaurant-distance">{{item.distance}}</div> -->
                     </div>
                 </div>
             </div>
