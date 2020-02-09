@@ -69,7 +69,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import url("https://fonts.googleapis.com/css?family=Hi+Melody&display=swap");
 button {
   font-family: "Hi Melody", cursive;
 }

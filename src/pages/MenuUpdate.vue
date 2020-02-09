@@ -335,6 +335,7 @@
       border: none;
       color: white;
       font-size: 38px;
+      font-family: 'Hi Melody', cursive;
     }
 
   }
