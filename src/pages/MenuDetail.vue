@@ -38,7 +38,7 @@
       <div class="menu-detail-bottom">
         <div class="menu-detail-bottom-date">
           <div class="menu-detail-bottom-date-menu-type">
-            <p>{{ menuString }}</p>
+            <p>{{ menuType | menuTypeFilter}}</p>
           </div>
           <div class="menu-detail-bottom-date-start-end-date">
             <p>{{ startDate | formatDate(endDate) }}</p>
@@ -49,7 +49,7 @@
         </div>
         <div class="menu-detail-bottom-info">
           <div class="menu-detail-bottom-info-price">
-            <p>{{ price }}</p>
+            <p>{{ price | priceFilter}}</p>
           </div>
           <div class="menu-detail-bottom-info-address">
             <p>{{ restaurantAddress }}</p>
@@ -65,7 +65,8 @@
 </template>
 
 <script>
-import HeaderBar from "@/components/headerBar";
+import HeaderBar from '@/components/headerBar'
+import codeFilter from '../js/codeFilter.js'
 
 export default {
   created() {
@@ -81,11 +82,15 @@ export default {
   },
   data() {
     return {
+      menuList: [
+        { menuName : '메뉴수정', pathName: 'MenuUpdate' },
+        { menuName : '신고하기', pathName: 'CS' }, // Todo 신고하기 path 지정 필요
+        { menuName : '고객센터', pathName: 'CS' }
+      ],
       isCompleted: false,
       restaurantName: "종로타워 한식부페 미담",
       operationTime: "10:30 - 14:30",
       price: undefined,
-      // menuType: "주간",
       menuImage: undefined,
       restaurantImage1: undefined,
       restaurantImage2: undefined,
@@ -96,19 +101,12 @@ export default {
       startDate: "2020-01-12",
       endDate: "2020-01-17",
       contents: "6,500원에 맛있는 점심 한 끼 드시고 가세요!!",
-      // distance: "200m 이내",
       restaurantAddress: "서울시 종로구 종로5길 14-3 파이낸스타워 B1",
       restaurantPhone: "02-2361-3345",
       isFavorite: false,
       menuId: "1",
       gpsX: 0,
       gpsY: 0,
-      // slides: ["https://picsum.photos/1024/480/?image=12", "https://picsum.photos/1024/480/?image=22", "https://picsum.photos/1024/480/?image=10"],
-      menuList: [
-        { menuName : '메뉴수정', pathName: 'MenuUpdate' },
-        { menuName : '신고하기', pathName: 'CS' }, // Todo 신고하기 path 지정 필요
-        { menuName : '고객센터', pathName: 'CS' }
-      ],
       geoX: 0,
       geoY: 0
     };
@@ -133,7 +131,6 @@ export default {
 
         let resArray = []
         tempArray.forEach((value) => {
-          console.log('value : ', value)
           if(value) {
             resArray.push(value)
           }
@@ -263,7 +260,12 @@ export default {
   filters: {
     formatDate: function(startDate, endDate) {
       return startDate + " ~ " + endDate;
-    }
+    },
+    priceFilter(val){
+      let num = new Number(val);
+      return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,") + " 원"
+    },
+    menuTypeFilter: codeFilter.menuType
   }
 }
 </script>
@@ -402,12 +404,12 @@ export default {
 
           p {
             color: #828282;
-            font-size: 22px;
+            font-size: 20px;
           }
         }
         .menu-detail-bottom-info-phone-distance {
           span {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
           }
           span:first-child {

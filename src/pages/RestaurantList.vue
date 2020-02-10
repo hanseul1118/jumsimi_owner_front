@@ -78,9 +78,7 @@
         filters:{
             priceFilter(val){
                 let num = new Number(val);
-
                 return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,") + " 원"
-
             },
             menuTypeFilter: codeFilter.menuType
         },

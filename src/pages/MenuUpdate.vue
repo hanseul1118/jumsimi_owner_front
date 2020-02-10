@@ -123,12 +123,18 @@
           endDate : this.endDate
         }
 
-        console.log("param : " , params)
-
         this.$api.menuUpdate(params)
         .then(response => {
-          console.log('result : ' , response)
-
+          switch(response.data.errCode) {
+            case 200: 
+              this.$router.push({ name : "MenuDetail" , params: { menuId : this.menuId } })
+            break;
+            case 500:
+              console.log(response.data.msg)
+            break;
+            default:
+            console.log(response.data)
+          }
         })
         .catch(error => {
           console.log('error : ' , error)
@@ -136,7 +142,6 @@
       },
       getSaterday(date){
         date = date.replace(/-/gi, ""); 
-        console.log('date', date)
 
         let year    = date.substring(0, 4);
         let mm      = date.substring(4, 6);
@@ -158,25 +163,17 @@
       },
       // menuType 에 따른 endDate 구하기
       getEndDate(){
-        if(this.menuType == '01'){
-         
+        if(this.menuType == '01') {
           this.endDate = this.startDate;
-
-        }else if(this.menuType == '02') {    // menutype 주간
-          
+        } else if(this.menuType == '02') {   // menutype 주간
           this.getSaterday(this.startDate)  
-
-        }else if(this.menuType == '03') {   // menutype 월간                         
-          
+        } else if(this.menuType == '03') {   // menutype 월간                         
           let day = this.startDate.replace(/-/gi, ""); 
-
           let year = day.substring(0, 4);
           let mm   = day.substring(4, 6);
           let dd   = new Date(year, mm, 0).getDate().toString();
-
           this.endDate =  year + '-' + mm + '-' + (dd[1]?dd:"0"+dd[0]);
-          
-        }else{
+        } else {
           this.endDate = this.startDate;
         }
       }

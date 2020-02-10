@@ -26,6 +26,7 @@
 
 <script>
   import HeaderBar from "../components/headerBar"
+  import { mapGetters } from 'vuex'
 
   export default {
     components: {
@@ -52,6 +53,9 @@
         file: undefined
       }
     },
+    computed: mapGetters({
+      userId : 'getUserId'
+    }),
     methods: {
       createRestaurant: function() {
         let formData = new FormData();
@@ -64,6 +68,7 @@
         formData.append('gpsX', this.resLat);
         formData.append('gpsY', this.resLng);
         formData.append('lunchOperationTime', this.resOperTime);
+        formData.append('modifiedUserId', this.userId);
 
         this.$api.createRestaurant(formData)
         .then((response) => {
@@ -72,7 +77,8 @@
               this.$router.push({name: 'RestaurantList'}) 
               break;
             case 500:
-              alert(response.data.msg) 
+              console.log(response)
+              alert(response.data) 
               break;
             default:
               console.log('check errCode : ', response.data);

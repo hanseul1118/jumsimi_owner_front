@@ -44,7 +44,6 @@ export default {
           switch (response.data.errCode) {
             case 200: {
               this.$store.commit('setUserInfo', response.data);
-              console.log('response.data : ', response.data)
               this.$router.push({name: 'RestaurantList'})
               break
             }
@@ -60,8 +59,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log('error =====>', err)
-          alert('axios catch')
+          console.log('error: ', err)
         })
     }
   }
