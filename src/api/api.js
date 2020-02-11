@@ -22,8 +22,11 @@ const API = {
   // 5. 메뉴 수정
   menuUpdate (request) {
     let url = `${API_URL}/api/menu`
+    let headers = { 
+      'Content-Type': 'multipart/form-data'
+    }
     
-    return axios.put(url, request )
+    return axios.put(url, request, { headers: headers })
   },
 
   // 6. 식당 등록

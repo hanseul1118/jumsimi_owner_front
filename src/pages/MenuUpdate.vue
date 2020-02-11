@@ -3,7 +3,10 @@
     <header-bar :type=1></header-bar>
     <div class="menu-update-body">
       <div class="menu-top">
-        <img :src="menuImage" class="menu-img"/>
+        <input id="file" type="file" ref="file" @change="previewImage" accept="image/*">
+        <div>
+          <img id="preview-image" :src="menuImage" class="menu-img" @click="imageClick()"/>
+        </div>
       </div>
       <div class="menu-type-bar">
         <input type="radio" id="type-day"   name="menu-type" value="01" v-model="menuType"> 
@@ -34,7 +37,7 @@
                         v-on="on"
                       ></v-text-field>
                     </template>
-                    <v-date-picker v-model="startDate" no-title scrollable color="#CF5252">
+                    <v-date-picker v-model="startDate" :allowed-dates="blockDates" no-title scrollable color="#CF5252">
                       <v-spacer></v-spacer>
                       <v-btn text color="#CF5252" @click="menu = false">취소</v-btn>
                       <v-btn text color="#CF5252" @click="$refs.menu.save(startDate)">확인</v-btn>
@@ -78,7 +81,6 @@
     data() {
       return{
         menuId: "1",
-        menuImage: undefined,
         menuType: undefined,
         startDate: new Date().toISOString().substr(0, 10),
         endDate: new Date().toISOString().substr(0, 10),
@@ -86,7 +88,9 @@
         modal: false,
         menu2: false,
         contents: "",
-        price: 0
+        price: 0,
+        menuImage: 'https://live.staticflickr.com/65535/48580618611_2dab0d71f5_o.jpg',
+        file: undefined
       };
     },
     methods: {
@@ -99,7 +103,7 @@
           .then(response => {
             if(response.data.errCode == 200) {
               this.price = response.data.price
-              this.menuImage = response.data.menuImage
+              this.menuImage = response.data.restaurantImage1
               this.contents = response.data.contents
               // this.menuType = response.data.menuType
               this.menuType = '01' // 임시
@@ -113,17 +117,17 @@
           })
       },
       setMenu(){
-        let params = {
-          menuId : this.menuId,
-          price : this.price,
-          menuImage : this.menuImage,
-          contents : this.contents,
-          menuType : this.menuType,
-          startDate : this.startDate,
-          endDate : this.endDate
-        }
+        let formData = new FormData();
+        
+        formData.append('menuId', this.menuId);
+        formData.append('price', this.price);
+        formData.append('menuImage', this.menuImage);
+        formData.append('contents', this.contents);
+        formData.append('menuType', this.menuType);
+        formData.append('startDate', this.startDate);
+        formData.append('endDate', this.endDate);
 
-        this.$api.menuUpdate(params)
+        this.$api.menuUpdate(formData)
         .then(response => {
           switch(response.data.errCode) {
             case 200: 
@@ -176,6 +180,56 @@
         } else {
           this.endDate = this.startDate;
         }
+      },
+      imageClick() {
+        document.getElementById('file').click()
+      },
+      previewImage(event) {
+        console.log('event : ', event)
+        this.file = this.$refs.file.files[0];
+        
+        if(!this.file) {
+          return;
+        }
+
+        this.checkFileSize()
+
+        let reader = new FileReader();
+
+        reader.onload = (e) => {
+          this.menuImage = e.target.result;
+
+          let image = new Image();
+          image.src = e.target.result;
+
+          image.onload = function() {
+            document.getElementById('preview-image').style.width = '340px'
+            document.getElementById('preview-image').style.height = '340px'
+          };
+        }
+
+        reader.readAsDataURL(this.file);
+      },
+      checkFileSize() {
+        var maxSize  = 5 * 1024 * 1024 // 5MB
+        var fileSize = 0;
+        
+        fileSize = parseInt(this.file.size)
+
+        if(fileSize > maxSize) {
+          alert("프리뷰 용량은 5MB 보다 작아야 합니다.");
+          return;
+        }
+      },
+      blockDates(val){
+        let today = new Date().setHours(0,0,0,0)
+        let theDay = new Date(val).setHours(0,0,0,0)
+
+        if(theDay >= today){
+          return true
+        }else{
+          return false
+        }
       }
     },
     watch:{
@@ -224,6 +278,25 @@
     margin: 0 auto;
     padding-bottom: 70px; 
     .menu-top{
+      position: relative;
+      display: block;
+      width: 100%;
+      background-color: #F7F7F7;
+
+      input {
+        display: none;
+      }
+      label {
+        position: relative;
+        width: 340px;
+        height: 340px;
+        display: block;
+        margin: auto;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+      }
       .menu-img{
         width:100%;
         height: 351px;
