@@ -118,10 +118,11 @@
       },
       setMenu(){
         let formData = new FormData();
+
+        formData.append('file', this.file);
         
         formData.append('menuId', this.menuId);
         formData.append('price', this.price);
-        formData.append('menuImage', this.menuImage);
         formData.append('contents', this.contents);
         formData.append('menuType', this.menuType);
         formData.append('startDate', this.startDate);
@@ -131,13 +132,13 @@
         .then(response => {
           switch(response.data.errCode) {
             case 200: 
-              this.$router.push({ name : "MenuDetail" , params: { menuId : this.menuId } })
-            break;
+              this.$router.replace({ name : "MenuDetail" , params: { menuId : this.menuId } })
+              break;
             case 500:
               console.log(response.data.msg)
-            break;
+              break;
             default:
-            console.log(response.data)
+              console.log(response.data)
           }
         })
         .catch(error => {
@@ -185,9 +186,9 @@
         document.getElementById('file').click()
       },
       previewImage(event) {
-        console.log('event : ', event)
+        console.log(event.target.files[0]);
         this.file = this.$refs.file.files[0];
-        
+
         if(!this.file) {
           return;
         }
