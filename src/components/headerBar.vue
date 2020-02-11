@@ -25,50 +25,49 @@
 </template>
 
 <script>
-    export default {
-        data(){
-            return {
-                menuClick : false
-            }
-        },
-        props:{
-            type:{
-                /**
-                 *  0:타이틀
-                 *  1:타이틀 + 뒤로가기 버튼
-                 *  2:타이틀 + 메뉴 버튼
-                 *  3:타이틀 + 뒤로가기 + 메뉴 버튼 */
-                type: Number,
-                default: 0,
-                required: false
-            },
-            passedMenuId: {
-                type: String,
-                default: undefined,
-                required: false
-            },
-            menuList: {
-              type: Array,
-              required: false
-            }
-        },
-        methods:{
-            goBack(){
-                history.go(-1);
-            },
-            goRestaurantList(){
-              this.$router.push({name: 'RestaurantList'})
-            },
-            emitFuncion(pathName){
-              if(this.passedMenuId) {
-                console.log(' this.passedMenuId',  this.passedMenuId)
-                this.$router.push({name: pathName, props: { menuId:  this.passedMenuId}})
-              }else{
-                this.$router.push({name:pathName})
-              }
-            }
+  export default {
+    data(){
+      return {
+        menuClick : false
+      }
+    },
+    props:{
+      type:{
+        /**
+         *  0:타이틀
+         *  1:타이틀 + 뒤로가기 버튼
+         *  2:타이틀 + 메뉴 버튼
+         *  3:타이틀 + 뒤로가기 + 메뉴 버튼 */
+        type: Number,
+        default: 0,
+        required: false
+      },
+      passedMenuId: {
+        type: String,
+        default: undefined,
+        required: false
+      },
+      menuList: {
+        type: Array,
+        required: false
+      }
+    },
+    methods:{
+      goBack(){
+        history.go(-1);
+      },
+      goRestaurantList(){
+        this.$router.push({name: 'RestaurantList'})
+      },
+      emitFuncion(pathName){
+        if(this.passedMenuId) {
+          this.$router.push({ name: pathName, props: { menuId: this.passedMenuId } })
+        }else{
+          this.$router.push({ name: pathName })
         }
+      }
     }
+  }
 </script>
 
 <style lang="scss" scoped>

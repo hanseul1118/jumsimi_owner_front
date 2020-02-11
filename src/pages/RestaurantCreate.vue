@@ -74,7 +74,7 @@
         .then((response) => {
           switch(response.data.errCode) {
             case 200:
-              this.$router.push({name: 'RestaurantList'}) 
+              this.$router.replace({ name: 'RestaurantList' }) 
               break;
             case 500:
               console.log('server err : ', response)
