@@ -5,7 +5,7 @@
             <div v-for="(item, index) in menuList" class="restaurant-list-card" :key="index" >
                 <div class="card-left" @click="likeClick(item)">
                     <!-- <img class="card-like" > -->
-                    <img class="card-img" >
+                    <img class="card-img" :src="item.originalImage1">
                     <img
                     class="favorite-icon"
                     :src="item.isFavorite? favoriteOnImg : favoriteOffImg"
