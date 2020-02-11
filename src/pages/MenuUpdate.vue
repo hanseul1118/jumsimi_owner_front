@@ -103,7 +103,7 @@
           .then(response => {
             if(response.data.errCode == 200) {
               this.price = response.data.price
-              this.menuImage = response.data.restaurantImage1
+              this.menuImage = response.data.menuImage
               this.contents = response.data.contents
               // this.menuType = response.data.menuType
               this.menuType = '01' // 임시
