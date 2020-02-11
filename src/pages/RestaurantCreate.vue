@@ -77,8 +77,7 @@
               this.$router.push({name: 'RestaurantList'}) 
               break;
             case 500:
-              console.log(response)
-              alert(response.data) 
+              console.log('server err : ', response)
               break;
             default:
               console.log('check errCode : ', response.data);
