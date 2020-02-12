@@ -67,6 +67,7 @@
 <script>
 import HeaderBar from '@/components/headerBar'
 import codeFilter from '../js/codeFilter.js'
+import { mapGetters } from 'vuex'
 
 export default {
   created() {
@@ -82,14 +83,10 @@ export default {
   },
   data() {
     return {
-      menuList: [
-        { menuName : '메뉴수정', pathName: 'MenuUpdate' },
-        { menuName : '신고하기', pathName: 'CS' }, // Todo 신고하기 path 지정 필요
-        { menuName : '고객센터', pathName: 'CS' }
-      ],
       isCompleted: false,
       restaurantName: "종로타워 한식부페 미담",
       operationTime: "10:30 - 14:30",
+      menuUserId: undefined,
       price: undefined,
       menuImage: undefined,
       restaurantImage1: undefined,
@@ -162,6 +159,25 @@ export default {
       } else {
         return '알수없음'
       }
+    },
+    ...mapGetters({
+      userId : 'getUserId'
+    }),
+    menuList() {
+      if(this.userId == this.menuUserId){
+
+        return [
+                { menuName : '메뉴수정', pathName: 'MenuUpdate' },
+                { menuName : '신고하기', pathName: 'CS' }, // Todo 신고하기 path 지정 필요
+                { menuName : '고객센터', pathName: 'CS' }
+              ]
+      }else{
+
+        return [
+                { menuName : '신고하기', pathName: 'CS' }, // Todo 신고하기 path 지정 필요
+                { menuName : '고객센터', pathName: 'CS' }
+              ]
+      }
     }
   },
   methods: {
@@ -203,6 +219,7 @@ export default {
       })
     },
     mapResult: function(result) {
+      this.menuUserId = result.userId,
       this.price = result.price,
       this.menuImage = result.menuImage,
       this.contents = result.contents,
@@ -255,7 +272,7 @@ export default {
           return `${dist.toFixed(0)}M 이내`
         }
       }
-    }
+    },
   },
   filters: {
     formatDate: function(startDate, endDate) {
@@ -266,7 +283,7 @@ export default {
       return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,") + " 원"
     },
     menuTypeFilter: codeFilter.menuType
-  }
+  },
 }
 </script>
 
