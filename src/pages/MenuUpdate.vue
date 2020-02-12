@@ -37,7 +37,7 @@
                         v-on="on"
                       ></v-text-field>
                     </template>
-                    <v-date-picker v-model="startDate" :allowed-dates="blockDates" no-title scrollable color="#CF5252">
+                    <v-date-picker v-model="startDate" :allowed-dates="blockDates" no-title :scrollable="false" color="#CF5252" @input="$refs.menu.save(startDate)">
                       <v-spacer></v-spacer>
                       <v-btn text color="#CF5252" @click="menu = false">취소</v-btn>
                       <v-btn text color="#CF5252" @click="$refs.menu.save(startDate)">확인</v-btn>
