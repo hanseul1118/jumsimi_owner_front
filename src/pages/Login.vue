@@ -79,7 +79,6 @@ button {
   position: relative;
   align-items: center;
   justify-content: center;
-  font-family: "Hi Melody", cursive;
   .login-flex-box {
     width: calc(100% - 100px);
 
@@ -89,6 +88,7 @@ button {
       font-size: 55px;
       letter-spacing: -6.02px;
       color: #cf5252;
+      font-family: "Hi Melody", cursive;
     }
     .login-input-box {
       input:first-child {
