@@ -2,9 +2,9 @@
   <div class="restaurant-create-container">
     <HeaderBar :type="0" class="header-bar"></HeaderBar>
     <div class="restaurant-create-flex-box">
-      <div class="restaurant-create-img">
+      <div class="restaurant-create-img" id="restaurant-img-box">
         <input id="file" type="file" ref="file" @change="previewImage" accept="image/*">
-        <div>
+        <div id="img-box">
           <!-- <label for="file">
           </label> -->
           <img id="preview-image" :src="imageData" @click="imageClick()">
@@ -109,9 +109,20 @@
           image.src = e.target.result;
 
           image.onload = function() {
-            document.getElementById('preview-image').style.width = '340px'
-            document.getElementById('preview-image').style.height = '340px'
-          };
+            let width = image.width
+            let height = image.height
+            console.log('width : ', width);
+            console.log('height : ', height);
+            if(width >= height) {
+              document.getElementById('preview-image').style.maxWidth = '100%'
+              document.getElementById('preview-image').style.height = 'auto'
+              // document.getElementById('restaurant-img-box').style.height = 'auto'
+            } else {
+              document.getElementById('preview-image').style.width = '100%'
+              document.getElementById('preview-image').style.height = 'auto'
+              // document.getElementById('restaurant-img-box').style.height = 'auto'
+            }
+          }
         }
 
         reader.readAsDataURL(this.file);
