@@ -68,6 +68,7 @@
 <script>
   import HeaderBar from "@/components/headerBar"
   import codeFilter from '../js/codeFilter.js'
+  import { mapGetters } from 'vuex'
 
   export default {
     created() {
@@ -85,8 +86,6 @@
         startDate: new Date().toISOString().substr(0, 10),
         endDate: new Date().toISOString().substr(0, 10),
         menu: false,
-        modal: false,
-        menu2: false,
         contents: "",
         price: 0,
         menuImage: 'https://live.staticflickr.com/65535/48580618611_2dab0d71f5_o.jpg',
@@ -95,21 +94,22 @@
     },
     methods: {
       getMenuDetail(menuId) {
-          let params = {
-            menuId : menuId
-          }
+
+          let params = { menuId : menuId }
           
           this.$api.menuDetail(params)
           .then(response => {
             if(response.data.errCode == 200) {
+
+              this.checkUserId(response.data.userId)
               this.price = response.data.price
               this.menuImage = response.data.menuImage
               this.contents = response.data.contents
-              // this.menuType = response.data.menuType
-              this.menuType = '01' // 임시
+              this.menuType = response.data.menuType
               this.startDate = response.data.startDate
               this.endDate= response.data.endDate
               this.restaurantId = response.data.restaurantId
+
             }
           })
           .catch(error => {
@@ -120,7 +120,6 @@
         let formData = new FormData();
 
         formData.append('file', this.file);
-        
         formData.append('menuId', this.menuId);
         formData.append('price', this.price);
         formData.append('contents', this.contents);
@@ -231,6 +230,9 @@
         }else{
           return false
         }
+      },
+      checkUserId(menuUserId){
+        if(menuUserId !== this.userId) this.$router.go(-1)
       }
     },
     watch:{
@@ -244,29 +246,13 @@
     components:{
       HeaderBar
     },
+    computed:{
+    ...mapGetters({
+        userId : 'getUserId'
+      })
+    },
     filters: {
       menuTypeFilter: codeFilter.menuType
-
-    // formatPrice: function(price) {
-    //   console.log("price : " ,price)
-    //   let point, len, str ;
-
-    //   point = String(price).length % 3 ;
-    //   len = String(price).length ; 
-
-    //   str = String(price).substring(0, point)
-      
-    //   console.log("str : ", str)
-    //   while (point < len) {
-    //     if(str != "") str += ",";
-    //     str += String(price).substring(point, point + 3);
-    //     point += 3;
-    //   }
-
-    //   console.log("return : " ,str)
-
-    //   return str;
-    // }
     }
   };
 </script>

@@ -10,7 +10,7 @@
           type="password"
           :placeholder="passwordPlaceholder"
           v-model="userPassword"
-          v-on:keyup.enter="login"
+          @keyup.enter="login"
         />
       </div>
       <button class="login-button" @click="login">로그인</button>

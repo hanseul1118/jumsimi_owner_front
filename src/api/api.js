@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { store } from '../store/store.js'
 
 let API_URL = process.env.VUE_APP_API_ENDPOINT
 
@@ -23,6 +24,7 @@ const API = {
   menuUpdate (request) {
     let url = `${API_URL}/api/menu`
     let headers = { 
+      Authorization: `bearer ${store.state.userInfo.token}`,
       'Content-Type': 'multipart/form-data'
     }
     
@@ -33,6 +35,7 @@ const API = {
   createRestaurant (request) {
     let url = `${API_URL}/api/restaurant`
     let headers = { 
+      Authorization: `bearer ${store.state.userInfo.token}`,
       'Content-Type': 'multipart/form-data'
     }
 
