@@ -8,7 +8,7 @@
           <p>점심시간 {{ operationTime }}</p>
         </div>
         <div class="menu-detail-top-right">
-          <auto-rotate><img src="../assets/icon_share.svg" /></auto-rotate>
+          <img src="../assets/icon_share.svg" />
         </div>
       </div>
 

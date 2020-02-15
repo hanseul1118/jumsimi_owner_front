@@ -26,11 +26,13 @@
 
 <script>
   import HeaderBar from "../components/headerBar"
+  import AutoRotate from "@/components/AutoRotate"
   import { mapGetters } from 'vuex'
 
   export default {
     components: {
-      HeaderBar
+      HeaderBar,
+      AutoRotate
     },
     data() {
       return {
@@ -50,7 +52,8 @@
         resLng: "",
         restaurantImage: [],
         imageData: 'https://live.staticflickr.com/65535/48580618611_2dab0d71f5_o.jpg',
-        file: undefined
+        file: undefined,
+        rotatedFile: undefined
       }
     },
     computed: mapGetters({
@@ -61,7 +64,7 @@
       createRestaurant: function() {
         let formData = new FormData();
         
-        formData.append('file', this.file);
+        formData.append('file', this.rotatedFile);
         formData.append('resOwnersId', this.resOwnersId);
         formData.append('restaurantName', this.resName);
         formData.append('restaurantAddress', this.resAddress);
@@ -103,8 +106,6 @@
         let reader = new FileReader();
 
         reader.onload = (e) => {
-          this.imageData = e.target.result;
-
           let image = new Image();
           image.src = e.target.result;
 
@@ -120,9 +121,54 @@
               document.getElementById('preview-image').style.height = 'auto'
             }
           }
+
+          this.imageData = e.target.result;
         }
 
         reader.readAsDataURL(this.file);
+
+        let obj = {
+          data: new FormData(),
+          dataType: this.file.type,
+          file: this.file
+        }
+
+        obj.data.append('content', this.file, this.file.name)
+        this.save(obj)
+      },
+      save (obj) {
+        const getOrientedImage = require('exif-orientation-image')
+        let blob = null
+        return new Promise((resolve, reject) => {
+          getOrientedImage(obj.file, function (err, canvas) {
+            if (!err) {
+              if (canvas.getContext){
+                var ctx = canvas.getContext('2d');
+                var imgData=ctx.getImageData(0,0,canvas.width,canvas.height);
+                var data=imgData.data;
+                for(var i=0;i<data.length;i+=4){
+                    if(data[i+3]<255){
+                        data[i]=255;
+                        data[i+1]=255;
+                        data[i+2]=255;
+                        data[i+3]=255;
+                    }
+                }
+                ctx.putImageData(imgData,0,0);
+              }
+              canvas.toBlob(function (blob) {
+                  resolve(blob)
+              }, obj.file.type, 0.92)
+            }
+            if (err) {
+              reject()
+            }
+          })
+        }).then((orientedImageBlob) => {
+          blob = orientedImageBlob
+          this.imageData = URL.createObjectURL(blob)
+          this.rotatedFile = new File([blob], this.file.name, { type: blob.type })
+        })
       },
       checkFileSize() {
         var maxSize  = 5 * 1024 * 1024 // 5MB
