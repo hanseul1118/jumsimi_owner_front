@@ -2,10 +2,10 @@ import Vue from "vue"
 
 // 모듈
 import Router from "vue-router"
-// import { store } from "./store/store" 
+import { store } from './store/store'
 
 // 화면
-import RestaurantList from "@/pages/RestaurantList.vue"
+import MenuList from "@/pages/MenuList.vue"
 import RestaurantCreate from "@/pages/RestaurantCreate.vue"
 import MenuDetail from "@/pages/MenuDetail.vue"
 import MenuUpdate from "@/pages/MenuUpdate.vue"
@@ -22,22 +22,17 @@ const router = new Router({
         {
             path: "/",
             name: "Main",
-            component: Login
+            component: MenuList
         },
-        { 
-            path: "/",
-            name: "Login",
-            component: Login
-        },  
         { 
             path: "/login",
             name: "Login",
             component: Login
         },
         { 
-            path: "/restaurantlist",
-            name: "RestaurantList",
-            component: RestaurantList
+            path: "/menulist",
+            name: "MenuList",
+            component: MenuList
         },
         { 
             path: "/restaurantcreate",
@@ -66,6 +61,20 @@ const router = new Router({
             component: testmhs
         },
     ]
+})
+router.beforeEach((to, from, next) => {
+    /*eslint no-extra-boolean-cast: "off"*/
+    if(to.name == "Login"){
+        next()
+        return;
+    }
+    console.log('store.state', store.state)
+    if (!!store.state.userInfo || !!store.state.userInfo.token) {
+        next()
+    } else {
+        next({ name: "Login", params: to.params })
+        console.log('before routing, token is undefined')
+    }
 })
 
 export default router

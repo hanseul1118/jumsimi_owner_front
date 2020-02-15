@@ -1,9 +1,9 @@
 <template>
     <div class="bottom-bar">
-        <div v-show="type == 1" class="restaurantMapText" @click="goRestaurantMap">
+        <div v-show="type == 1" @click="goRestaurantMap">
             지도뷰로 보기
         </div>
-        <div v-show="type == 2" class="restaurantListText" @click="goRestaurantList">
+        <div v-show="type == 2" @click="goMenuList">
             리스트로 보기
         </div>
     </div>
@@ -22,7 +22,7 @@
             goRestaurantMap(){
 
             },
-            goRestaurantList(){
+            goMenuList(){
                 
             }
         }

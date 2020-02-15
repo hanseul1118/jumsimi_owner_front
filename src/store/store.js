@@ -16,7 +16,7 @@ export const store = new Vuex.Store({
   getters: {
     getToken: state => {
       if (state.userInfo && state.userInfo.token) {
-        return state.userInfo.token
+        return `Bearer ${state.userInfo.token}`
       } else {
         return undefined
       }
@@ -24,6 +24,13 @@ export const store = new Vuex.Store({
     getUserId: state => {
       if (state.userInfo.userId) {
         return state.userInfo.userId
+      } else {
+        return undefined
+      }
+    },
+    getBeforePage: state => {
+      if (state.beforePage) {
+        return state.beforePage
       } else {
         return undefined
       }

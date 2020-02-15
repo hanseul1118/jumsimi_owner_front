@@ -5,11 +5,11 @@
       <div class="menu-detail-top">
         <div class="menu-detail-top-left">
           <p>{{ restaurantName }}</p>
-          <p>점심시간 {{ operationTime }}</p>
+          <p>점심시간 {{ operationTime | timeFilter}}</p>
         </div>
-        <div class="menu-detail-top-right">
-          <img src="../assets/icon_share.svg" />
-        </div>
+        <!-- <div class="menu-detail-top-right">
+          <img src="../assets/icon_share.svg" alt="공유하기"/>
+        </div> -->
       </div>
 
       <div class="menu-detail-middle">
@@ -161,23 +161,17 @@ export default {
       }
     },
     ...mapGetters({
-      userId : 'getUserId'
+      userId : 'getUserId',
+      token : 'getToken'
     }),
     menuList() {
-      if(this.userId == this.menuUserId){
+      let menuListArray = [{ menuName : '고객센터', pathName: 'CS' }]
 
-        return [
-                { menuName : '메뉴수정', pathName: 'MenuUpdate' },
-                { menuName : '신고하기', pathName: 'CS' }, // Todo 신고하기 path 지정 필요
-                { menuName : '고객센터', pathName: 'CS' }
-              ]
-      }else{
-
-        return [
-                { menuName : '신고하기', pathName: 'CS' }, // Todo 신고하기 path 지정 필요
-                { menuName : '고객센터', pathName: 'CS' }
-              ]
+      if(this.userId == this.menuUserId || this.userId == 'admin'){
+        menuListArray.unshift({ menuName : '메뉴수정', pathName: 'MenuUpdate' })
       }
+      
+      return menuListArray
     }
   },
   methods: {
@@ -195,7 +189,7 @@ export default {
         menuId : menuId
       }
 
-      this.$api.menuDetail(params)
+      this.$api.menuDetail(params, this.token)
       .then(response => {
         switch(response.data.errCode) {
           case 200: {
@@ -281,6 +275,9 @@ export default {
     priceFilter(val){
       let num = new Number(val);
       return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,") + " 원"
+    },
+    timeFilter(val){
+        return val.substring(0,2) + ':' + val.substring(2,4) + '~' + val.substring(4,6) + ":"  + val.substring(6,8)
     },
     menuTypeFilter: codeFilter.menuType
   },
@@ -397,7 +394,7 @@ export default {
 
         p {
           color: #040404;
-          font-size: 28px;
+          font-size: 18px;
         }
       }
       .menu-detail-bottom-info {

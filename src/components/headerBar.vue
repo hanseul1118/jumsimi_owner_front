@@ -5,7 +5,7 @@
         <div class="back-btn" @click="goBack()" v-show="type == 1 || type == 3">
           뒤로
         </div>
-        <div class="header-txt" @click="goRestaurantList()">
+        <div class="header-txt" @click="goMenuList()">
           점심이
         </div>
         <div v-show="type == 2 || type == 3" class="header-menu-img-container">
@@ -54,10 +54,16 @@
     },
     methods:{
       goBack(){
-        history.go(-1);
+        switch(this.$route.name){
+          case 'MenuDetail ':
+            this.$router.push({name: 'MenuList'})
+            break;
+          default:
+            history.go(-1);
+        }
       },
-      goRestaurantList(){
-        this.$router.push({name: 'RestaurantList'})
+      goMenuList(){
+        this.$router.push({name: 'MenuList'})
       },
       emitFuncion(pathName){
         if(this.passedMenuId) {
