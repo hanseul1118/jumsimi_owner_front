@@ -16,7 +16,7 @@ export const store = new Vuex.Store({
   getters: {
     getToken: state => {
       if (state.userInfo && state.userInfo.token) {
-        return state.userInfo.token
+        return `Bearer ${state.userInfo.token}`
       } else {
         return undefined
       }

@@ -161,10 +161,11 @@ export default {
       }
     },
     ...mapGetters({
-      userId : 'getUserId'
+      userId : 'getUserId',
+      token : 'getToken'
     }),
     menuList() {
-      if(this.userId == this.menuUserId){
+      if(this.userId == this.menuUserId || this.userId == 'admin'){
 
         return [
                 { menuName : '메뉴수정', pathName: 'MenuUpdate' },
@@ -195,7 +196,7 @@ export default {
         menuId : menuId
       }
 
-      this.$api.menuDetail(params)
+      this.$api.menuDetail(params, this.token)
       .then(response => {
         switch(response.data.errCode) {
           case 200: {

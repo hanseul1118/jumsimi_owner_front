@@ -2,12 +2,12 @@
   <div class="restaurant-create-container">
     <HeaderBar :type="0" class="header-bar"></HeaderBar>
     <div class="restaurant-create-flex-box">
-      <div class="restaurant-create-img" id="restaurant-img-box">
+      <div class="restaurant-create-img">
         <input id="file" type="file" ref="file" @change="previewImage" accept="image/*">
-        <div id="img-box">
+        <div>
           <!-- <label for="file">
           </label> -->
-          <img id="preview-image" :src="imageData" @click="imageClick()">
+          <auto-rotate><img id="preview-image" :src="imageData" @click="imageClick()"></auto-rotate>
         </div>
       </div>
       <div class="restaurant-create-input-box">
@@ -54,7 +54,8 @@
       }
     },
     computed: mapGetters({
-      userId : 'getUserId'
+      userId : 'getUserId',
+      token : 'getToken'
     }),
     methods: {
       createRestaurant: function() {
@@ -68,9 +69,8 @@
         formData.append('gpsX', this.resLat);
         formData.append('gpsY', this.resLng);
         formData.append('lunchOperationTime', this.resOperTime);
-        formData.append('modifiedUserId', this.userId);
 
-        this.$api.createRestaurant(formData)
+        this.$api.createRestaurant(formData, this.token)
         .then((response) => {
           switch(response.data.errCode) {
             case 200:
@@ -111,16 +111,13 @@
           image.onload = function() {
             let width = image.width
             let height = image.height
-            console.log('width : ', width);
-            console.log('height : ', height);
+            
             if(width >= height) {
               document.getElementById('preview-image').style.maxWidth = '100%'
               document.getElementById('preview-image').style.height = 'auto'
-              // document.getElementById('restaurant-img-box').style.height = 'auto'
             } else {
               document.getElementById('preview-image').style.width = '100%'
               document.getElementById('preview-image').style.height = 'auto'
-              // document.getElementById('restaurant-img-box').style.height = 'auto'
             }
           }
         }

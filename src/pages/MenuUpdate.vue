@@ -5,7 +5,7 @@
       <div class="menu-top">
         <input id="file" type="file" ref="file" @change="previewImage" accept="image/*">
         <div>
-          <img id="preview-image" :src="menuImage" class="menu-img" @click="imageClick()"/>
+          <auto-rotate><img id="preview-image" :src="menuImage" class="menu-img" @click="imageClick()"/></auto-rotate>
         </div>
       </div>
       <div class="menu-type-bar">
@@ -76,9 +76,6 @@
 
       this.getMenuDetail(this.menuId)
     },
-    updated(){
-      // console.log(5, this.endDate, '/', this.startDate)
-    },
     data() {
       return{
         menuId: "1",
@@ -119,6 +116,18 @@
       setMenu(){
         let formData = new FormData();
 
+        if(
+          !this.menuId ||
+          !this.price ||
+          !this.contents ||
+          !this.contents ||
+          !this.menuType ||
+          !this.startDate
+        ) {
+          alert('화면에 빈 값이 있어요!')
+          return;
+        }
+
         formData.append('file', this.file);
         formData.append('menuId', this.menuId);
         formData.append('price', this.price);
@@ -127,7 +136,7 @@
         formData.append('startDate', this.startDate);
         formData.append('endDate', this.endDate);
 
-        this.$api.menuUpdate(formData)
+        this.$api.menuUpdate(formData, this.token)
         .then(response => {
           switch(response.data.errCode) {
             case 200: 
@@ -203,8 +212,16 @@
           image.src = e.target.result;
 
           image.onload = function() {
-            document.getElementById('preview-image').style.width = '340px'
-            document.getElementById('preview-image').style.height = '340px'
+            let width = image.width
+            let height = image.height
+            
+            if(width >= height) {
+              document.getElementById('preview-image').style.maxWidth = '100%'
+              document.getElementById('preview-image').style.height = 'auto'
+            } else {
+              document.getElementById('preview-image').style.width = '100%'
+              document.getElementById('preview-image').style.height = 'auto'
+            }
           };
         }
 
@@ -232,7 +249,7 @@
         }
       },
       checkUserId(menuUserId){
-        if(menuUserId !== this.userId) this.$router.go(-1)
+        if(menuUserId !== this.userId || menuUserId !== 'admin') this.$router.go(-1)
       }
     },
     watch:{
@@ -248,7 +265,8 @@
     },
     computed:{
     ...mapGetters({
-        userId : 'getUserId'
+        userId : 'getUserId',
+        token : 'getToken'
       })
     },
     filters: {
