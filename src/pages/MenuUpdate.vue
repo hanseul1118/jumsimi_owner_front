@@ -103,7 +103,8 @@
     },
     components:{
       HeaderBar,
-      AutoRotate
+      AutoRotate, 
+      LoadingBar
     },
     computed:{
     ...mapGetters({
@@ -328,18 +329,6 @@
       checkUserId(menuUserId){
         if(this.userId !== menuUserId && this.userId !== 'admin') this.$router.go(-1)
       }
-    },
-    components:{
-      HeaderBar,
-      LoadingBar
-    },
-    computed:{
-    ...mapGetters({
-        userId : 'getUserId'
-      })
-    },
-    filters: {
-      menuTypeFilter: codeFilter.menuType
     }
   };
 </script>
