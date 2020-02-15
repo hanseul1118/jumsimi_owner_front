@@ -5,7 +5,7 @@
       <div class="menu-detail-top">
         <div class="menu-detail-top-left">
           <p>{{ restaurantName }}</p>
-          <p>점심시간 {{ operationTime }}</p>
+          <p>점심시간 {{ operationTime | timeFilter}}</p>
         </div>
         <!-- <div class="menu-detail-top-right">
           <img src="../assets/icon_share.svg" alt="공유하기"/>
@@ -283,6 +283,9 @@ export default {
       let num = new Number(val);
       return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,") + " 원"
     },
+    timeFilter(val){
+        return val.substring(0,2) + ':' + val.substring(2,4) + '~' + val.substring(4,6) + ":"  + val.substring(6,8)
+    },
     menuTypeFilter: codeFilter.menuType
   },
 }
@@ -398,7 +401,7 @@ export default {
 
         p {
           color: #040404;
-          font-size: 28px;
+          font-size: 18px;
         }
       }
       .menu-detail-bottom-info {
