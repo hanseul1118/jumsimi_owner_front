@@ -165,20 +165,13 @@ export default {
       token : 'getToken'
     }),
     menuList() {
+      let menuListArray = [{ menuName : '고객센터', pathName: 'CS' }]
+
       if(this.userId == this.menuUserId || this.userId == 'admin'){
-
-        return [
-                { menuName : '메뉴수정', pathName: 'MenuUpdate' },
-                { menuName : '신고하기', pathName: 'CS' }, // Todo 신고하기 path 지정 필요
-                { menuName : '고객센터', pathName: 'CS' }
-              ]
-      }else{
-
-        return [
-                { menuName : '신고하기', pathName: 'CS' }, // Todo 신고하기 path 지정 필요
-                { menuName : '고객센터', pathName: 'CS' }
-              ]
+        menuListArray.unshift({ menuName : '메뉴수정', pathName: 'MenuUpdate' })
       }
+      
+      return menuListArray
     }
   },
   methods: {
