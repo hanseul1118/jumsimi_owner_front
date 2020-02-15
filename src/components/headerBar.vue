@@ -54,7 +54,13 @@
     },
     methods:{
       goBack(){
-        history.go(-1);
+        switch(this.$route.name){
+          case 'MenuDetail ':
+            this.$router.push({name: 'RestaurantList'})
+            break;
+          default:
+            history.go(-1);
+        }
       },
       goRestaurantList(){
         this.$router.push({name: 'RestaurantList'})

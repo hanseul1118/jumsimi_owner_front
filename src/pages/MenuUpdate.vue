@@ -215,9 +215,7 @@
       imageClick() {
         document.getElementById('file').click()
       },
-      previewImage(event) {
-        
-        console.log(event.target.files[0]);
+      previewImage() {
         this.file = this.$refs.file.files[0];
 
         if(!this.file) {
@@ -315,9 +313,15 @@
         }
       },
       checkUserId(menuUserId){
-        if(this.userId !== 'admin' && this.userId !== menuUserId) {
-          this.$router.go(-1)
-        }
+        if(this.userId !== menuUserId && this.userId !== 'admin') this.$router.go(-1)
+      }
+    },
+    watch:{
+      startDate(){
+        this.getEndDate();
+      },
+      menuType(){
+        this.getEndDate();
       }
     }
   };

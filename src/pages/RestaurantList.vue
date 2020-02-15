@@ -21,7 +21,7 @@
                     </div>
                     <div class="restaurant-price">{{item.price | priceFilter}}</div>
                     <div class="restaurant-bottom">
-                        <div class="restaurant-lunch-time">점심시간 {{item.lunchOperationTime}}</div>
+                        <div class="restaurant-lunch-time">점심시간 {{item.lunchOperationTime | timeFilter}}</div>
                         <!-- <div class="restaurant-distance">{{item.distance}}</div> -->
                     </div>
                 </div>
@@ -80,6 +80,9 @@
                 let num = new Number(val);
                 return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,") + " 원"
             },
+            timeFilter(val){
+                return val.substring(0,2) + ':' + val.substring(2,4) + '~' + val.substring(4,6) + ":"  + val.substring(6,8)
+            },
             menuTypeFilter: codeFilter.menuType
         },
         methods:{
@@ -110,7 +113,7 @@
                 }
 
                 // restaurant 리스트 불러오기
-                this.$api.menuList(params)
+                this.$api.menuList(params, this.token)
                 .then(response => {
                     if(response.data.errCode == 200) {
                         let result = response.data.menuList;
@@ -294,8 +297,13 @@
                     margin-top: 13px;
                     font-size: 14px;
                     color: #EF532E;
-                    height: 42px;
+                    height: 37px;
+                    overflow: hidden;
                     text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    line-height: 19px;
                 }
                 .restaurant-price{
                     font-size: 18px;

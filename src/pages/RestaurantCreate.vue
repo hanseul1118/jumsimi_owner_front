@@ -11,13 +11,13 @@
         </div>
       </div>
       <div class="restaurant-create-input-box">
-        <input type="text" :placeholder=resNamePlaceholder v-model=resName>
-        <input type="text" :placeholder=resOwnersIdPlaceholder v-model=resOwnersId>
-        <input type="text" :placeholder=resAddressPlaceholder v-model=resAddress>
-        <input type="text" :placeholder=resPhonePlaceholder v-model=resPhone>
-        <input type="text" :placeholder=resOperTimePlaceholder v-model=resOperTime>
-        <input type="text" :placeholder=resLatPlaceholder v-model=resLat>
-        <input type="text" :placeholder=resLngPlaceholder v-model=resLng>
+        <input type="text"   :placeholder="resNamePlaceholder"      v-model="resName">
+        <input type="text"   :placeholder="resOwnersIdPlaceholder"  v-model="resOwnersId">
+        <input type="text"   :placeholder="resAddressPlaceholder"   v-model="resAddress">
+        <input type="text"   :placeholder="resPhonePlaceholder"     v-model="resPhone">
+        <input type="number" :placeholder="resOperTimePlaceholder"  v-model="resOperTime" :maxLength="8" @keydown="checkMaxLength($event.target)">
+        <input type="text"   :placeholder="resLatPlaceholder"       v-model="resLat">
+        <input type="text"   :placeholder="resLngPlaceholder"       v-model="resLng">
       </div>
     </div>
     <button class="restaurnt-create-button" @click="createRestaurant">식당등록</button>
@@ -40,14 +40,14 @@
         resOwnersIdPlaceholder: "사장님 아이디",
         resAddressPlaceholder: "식당 주소",
         resPhonePlaceholder: "식당 전화번호",
-        resOperTimePlaceholder: "점심 운영시간",
+        resOperTimePlaceholder: "점심 운영시간(숫자 8자리)",
         resLatPlaceholder: "식당 위치(X)",
         resLngPlaceholder: "식당 위치(Y)",
         resName: "",
         resOwnersId: "",
         resAddress: "",
         resPhone: "",
-        resOperTime: "",
+        resOperTime: undefined,
         resLat: "",
         resLng: "",
         restaurantImage: [],
@@ -181,6 +181,12 @@
           return;
         }
       },
+       checkMaxLength(object){
+         console.log('object', object.value)
+        if (object.value.length > object.maxLength){
+            object.value = object.value.slice(0, object.maxLength);
+        }    
+      }
     }
   }
 </script>
