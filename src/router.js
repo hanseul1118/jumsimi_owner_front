@@ -2,7 +2,7 @@ import Vue from "vue"
 
 // 모듈
 import Router from "vue-router"
-// import { store } from "./store/store" 
+import { store } from './store/store'
 
 // 화면
 import RestaurantList from "@/pages/RestaurantList.vue"
@@ -22,13 +22,8 @@ const router = new Router({
         {
             path: "/",
             name: "Main",
-            component: Login
+            component: RestaurantList
         },
-        { 
-            path: "/",
-            name: "Login",
-            component: Login
-        },  
         { 
             path: "/login",
             name: "Login",
@@ -66,6 +61,19 @@ const router = new Router({
             component: testmhs
         },
     ]
+})
+router.beforeEach((to, from, next) => {
+    /*eslint no-extra-boolean-cast: "off"*/
+    if(to.name == "Login"){
+        next()
+        return;
+    }
+
+    if (!!store.state.userInfo && !!store.state.userInfo.token) {
+      next()
+    } else {
+      next({ name: "Login", params: to.params })
+    }
 })
 
 export default router

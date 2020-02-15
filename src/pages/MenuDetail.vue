@@ -7,9 +7,9 @@
           <p>{{ restaurantName }}</p>
           <p>점심시간 {{ operationTime }}</p>
         </div>
-        <div class="menu-detail-top-right">
-          <auto-rotate><img src="../assets/icon_share.svg" /></auto-rotate>
-        </div>
+        <!-- <div class="menu-detail-top-right">
+          <img src="../assets/icon_share.svg" alt="공유하기"/>
+        </div> -->
       </div>
 
       <div class="menu-detail-middle">

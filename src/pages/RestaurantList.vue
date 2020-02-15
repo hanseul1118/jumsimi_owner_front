@@ -258,7 +258,8 @@
                 }
             }
             .card-right{
-                display: inline-block;
+                display: inline-flex;
+                flex-direction: column;
                 margin-top: 12px;
                 margin-right: 15px;
                 width: calc(100% - 169px);
@@ -293,19 +294,23 @@
                     margin-top: 13px;
                     font-size: 14px;
                     color: #EF532E;
+                    height: 42px;
+                    text-overflow: ellipsis;
                 }
                 .restaurant-price{
                     font-size: 18px;
                     font-weight: bold;
                     position: relative;
-                    bottom: -16px;
+                    flex: 1;
+                    align-items: flex-end;
 
                 }
 
                 .restaurant-bottom{
                     display: flex;
+                    align-items: flex-end;
+                    flex: 1;
                     position: relative;
-                    bottom: -16px;
 
                     .restaurant-lunch-time{
                         font-size: 14px;
