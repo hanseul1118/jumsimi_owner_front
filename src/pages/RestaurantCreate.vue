@@ -21,16 +21,19 @@
       </div>
     </div>
     <button class="restaurnt-create-button" @click="createRestaurant">식당등록</button>
+    <LoadingBar :loading="loading"></LoadingBar>
   </div>
 </template>
 
 <script>
   import HeaderBar from "../components/headerBar"
+  import LoadingBar from "../components/loadingBar"
   import { mapGetters } from 'vuex'
 
   export default {
     components: {
-      HeaderBar
+      HeaderBar,
+      LoadingBar
     },
     data() {
       return {
@@ -50,7 +53,8 @@
         resLng: "",
         restaurantImage: [],
         imageData: 'https://live.staticflickr.com/65535/48580618611_2dab0d71f5_o.jpg',
-        file: undefined
+        file: undefined,
+        loading : false,
       }
     },
     computed: mapGetters({
@@ -70,21 +74,31 @@
         formData.append('lunchOperationTime', this.resOperTime);
         formData.append('modifiedUserId', this.userId);
 
+        this.loading = true //로딩바 활성화
+
         this.$api.createRestaurant(formData)
         .then((response) => {
           switch(response.data.errCode) {
             case 200:
+              
+              this.loading = false // 로딩바 비활성화
               this.$router.replace({ name: 'RestaurantList' }) 
               break;
             case 500:
+              alert('server err : ', response)
+              this.loading = false // 로딩바 비활성화
               console.log('server err : ', response)
               break;
             default:
+              alert(response.data.msg)
               console.log('check errCode : ', response.data);
+              this.loading = false // 로딩바 비활성화
           }
         })
         .catch((err) => {
+          alert(err)
           console.log(err);
+          this.loading = false // 로딩바 비활성화
         })
       },
       imageClick() {
