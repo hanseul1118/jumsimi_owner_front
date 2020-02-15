@@ -1,15 +1,235 @@
 <template>
-    <div>
-
+  <div class="restaurant-create-container">
+    <HeaderBar :type="0" class="header-bar"></HeaderBar>
+    <div class="restaurant-create-flex-box">
+      <div class="restaurant-create-img" id="restaurant-img-box">
+        <input id="file" type="file" ref="file" @change="previewImage" accept="image/*">
+        <div id="img-box">
+          <!-- <label for="file">
+          </label> -->
+          <img id="preview-image" :src="imageData" @click="imageClick()">
+        </div>
+      </div>
+      <div class="restaurant-create-input-box">
+        <input type="text" :placeholder=resNamePlaceholder v-model=resName>
+        <input type="text" :placeholder=resOwnersIdPlaceholder v-model=resOwnersId>
+        <input type="text" :placeholder=resAddressPlaceholder v-model=resAddress>
+        <input type="text" :placeholder=resPhonePlaceholder v-model=resPhone>
+        <input type="text" :placeholder=resOperTimePlaceholder v-model=resOperTime>
+        <input type="text" :placeholder=resLatPlaceholder v-model=resLat>
+        <input type="text" :placeholder=resLngPlaceholder v-model=resLng>
+      </div>
     </div>
+    <button class="restaurnt-create-button" @click="createRestaurant">식당등록</button>
+    <LoadingBar :loading="loading"></LoadingBar>
+  </div>
 </template>
 
 <script>
-    export default {
+  import HeaderBar from "../components/headerBar"
+  import LoadingBar from "../components/loadingBar"
+  import { mapGetters } from 'vuex'
+
+  export default {
+    components: {
+      HeaderBar,
+      LoadingBar
+    },
+    data() {
+      return {
+        resNamePlaceholder: "식당 이름",
+        resOwnersIdPlaceholder: "사장님 아이디",
+        resAddressPlaceholder: "식당 주소",
+        resPhonePlaceholder: "식당 전화번호",
+        resOperTimePlaceholder: "점심 운영시간",
+        resLatPlaceholder: "식당 위치(X)",
+        resLngPlaceholder: "식당 위치(Y)",
+        resName: "",
+        resOwnersId: "",
+        resAddress: "",
+        resPhone: "",
+        resOperTime: "",
+        resLat: "",
+        resLng: "",
+        restaurantImage: [],
+        imageData: 'https://live.staticflickr.com/65535/48580618611_2dab0d71f5_o.jpg',
+        file: undefined,
+        loading : false,
+      }
+    },
+    computed: mapGetters({
+      userId : 'getUserId'
+    }),
+    methods: {
+      createRestaurant: function() {
+        let formData = new FormData();
         
+        formData.append('file', this.file);
+        formData.append('resOwnersId', this.resOwnersId);
+        formData.append('restaurantName', this.resName);
+        formData.append('restaurantAddress', this.resAddress);
+        formData.append('restaurantPhone', this.resPhone);
+        formData.append('gpsX', this.resLat);
+        formData.append('gpsY', this.resLng);
+        formData.append('lunchOperationTime', this.resOperTime);
+        formData.append('modifiedUserId', this.userId);
+
+        this.loading = true //로딩바 활성화
+
+        this.$api.createRestaurant(formData)
+        .then((response) => {
+          switch(response.data.errCode) {
+            case 200:
+              
+              this.loading = false // 로딩바 비활성화
+              this.$router.replace({ name: 'RestaurantList' }) 
+              break;
+            case 500:
+              alert('server err : ', response)
+              this.loading = false // 로딩바 비활성화
+              console.log('server err : ', response)
+              break;
+            default:
+              alert(response.data.msg)
+              console.log('check errCode : ', response.data);
+              this.loading = false // 로딩바 비활성화
+          }
+        })
+        .catch((err) => {
+          alert(err)
+          console.log(err);
+          this.loading = false // 로딩바 비활성화
+        })
+      },
+      imageClick() {
+        document.getElementById('file').click()
+      },
+      previewImage: function(event) {
+        console.log('event : ', event)
+        this.file = this.$refs.file.files[0];
+        
+        if(!this.file) {
+          return;
+        }
+
+        this.checkFileSize()
+
+        let reader = new FileReader();
+
+        reader.onload = (e) => {
+          this.imageData = e.target.result;
+
+          let image = new Image();
+          image.src = e.target.result;
+
+          image.onload = function() {
+            let width = image.width
+            let height = image.height
+            console.log('width : ', width);
+            console.log('height : ', height);
+            if(width >= height) {
+              document.getElementById('preview-image').style.maxWidth = '100%'
+              document.getElementById('preview-image').style.height = 'auto'
+              // document.getElementById('restaurant-img-box').style.height = 'auto'
+            } else {
+              document.getElementById('preview-image').style.width = '100%'
+              document.getElementById('preview-image').style.height = 'auto'
+              // document.getElementById('restaurant-img-box').style.height = 'auto'
+            }
+          }
+        }
+
+        reader.readAsDataURL(this.file);
+      },
+      checkFileSize() {
+        var maxSize  = 5 * 1024 * 1024 // 5MB
+        var fileSize = 0;
+        
+        fileSize = parseInt(this.file.size)
+
+        if(fileSize > maxSize) {
+          alert("프리뷰 용량은 5MB 보다 작아야 합니다.");
+          return;
+        }
+      },
     }
+  }
 </script>
 
 <style lang="scss" scoped>
 
+  .restaurant-create-container {
+
+    .restaurant-create-flex-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 25px;
+      flex-direction: column;
+
+      .restaurant-create-img {
+        position: relative;
+        display: block;
+        width: 100%;
+        background-color: #F7F7F7;
+        input {
+          display: none;
+        }
+        label {
+          position: relative;
+          width: 340px;
+          height: 340px;
+          display: block;
+          margin: auto;
+        }
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+       
+      .restaurant-create-input-box {
+        display: block;
+        width: 100%;
+        input:first-child {
+          margin-top: 10px;
+        }
+        input:last-child {
+          margin-bottom: 50px;
+        }
+        input {
+          margin-bottom: 10px;
+          display: block;
+          border: none;
+          border-bottom: solid 1px #707070;
+          padding: 10px;
+          width: 100%;
+          box-sizing: border-box;
+          font-size: 16px;
+          color: #707070;
+        }
+        ::placeholder {
+          color: #D0D0D0;
+        }
+        input:focus {
+          outline: none;
+          color: #F65130;
+          border-bottom: solid 1px #F65130;
+        }
+      }
+    }
+
+    .restaurnt-create-button {
+      position: fixed;
+      bottom: 0px;
+      font-family: 'Hi Melody', cursive;
+      width: 100vw;
+      height: 50px;
+      background-color: #CF5252;
+      text-align: center;
+      font-size: 38px;
+      letter-spacing: -3.57px;
+      color: #FFFFFF;
+    }
+  }
 </style>

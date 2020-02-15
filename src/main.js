@@ -6,7 +6,12 @@ import router from '@/router'
 import { store } from './store/store'
 import axios from 'axios'
 import API from '@/api/api.js'
+import BootstrapVue from 'bootstrap-vue/dist/bootstrap-vue.esm'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+import vuetify from '@/plugins/vuetify'
 
+Vue.use(BootstrapVue)
 
 Vue.prototype.$http = axios
 Vue.prototype.$api = API
@@ -20,5 +25,11 @@ new Vue({
   router,
   store,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  vuetify,
+
+  beforeCreate() {
+    this.$store.commit('initializeStore');
+  }
 })
+
