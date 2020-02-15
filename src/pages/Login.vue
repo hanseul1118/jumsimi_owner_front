@@ -45,7 +45,7 @@ export default {
           switch (response.data.errCode) {
             case 200: {
               this.$store.commit('setUserInfo', response.data);
-              this.$router.push({name: 'RestaurantList'})
+              this.$router.push({name: 'MenuList'})
               break
             }
             case 400: {

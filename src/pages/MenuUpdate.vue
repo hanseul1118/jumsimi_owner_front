@@ -315,14 +315,6 @@
       checkUserId(menuUserId){
         if(this.userId !== menuUserId && this.userId !== 'admin') this.$router.go(-1)
       }
-    },
-    watch:{
-      startDate(){
-        this.getEndDate();
-      },
-      menuType(){
-        this.getEndDate();
-      }
     }
   };
 </script>
