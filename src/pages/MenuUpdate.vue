@@ -68,12 +68,12 @@
 <script>
   import HeaderBar from "@/components/headerBar"
   import codeFilter from '../js/codeFilter.js'
+  import AutoRotate from "@/components/AutoRotate"
   import { mapGetters } from 'vuex'
 
   export default {
     created() {
       this.menuId = this.$route.params.menuId
-
       this.getMenuDetail(this.menuId)
     },
     data() {
@@ -86,15 +86,37 @@
         contents: "",
         price: 0,
         menuImage: 'https://live.staticflickr.com/65535/48580618611_2dab0d71f5_o.jpg',
-        file: undefined
+        file: undefined,
+        rotatedFile: undefined
       };
+    },
+    watch:{
+      startDate(){
+        this.getEndDate();
+      },
+      menuType(){
+        this.getEndDate();
+      }
+    },
+    components:{
+      HeaderBar,
+      AutoRotate
+    },
+    computed:{
+    ...mapGetters({
+        userId : 'getUserId',
+        token : 'getToken'
+      })
+    },
+    filters: {
+      menuTypeFilter: codeFilter.menuType
     },
     methods: {
       getMenuDetail(menuId) {
 
           let params = { menuId : menuId }
           
-          this.$api.menuDetail(params)
+          this.$api.menuDetail(params, this.token)
           .then(response => {
             if(response.data.errCode == 200) {
 
@@ -128,7 +150,7 @@
           return;
         }
 
-        formData.append('file', this.file);
+        formData.append('file', this.rotatedFile);
         formData.append('menuId', this.menuId);
         formData.append('price', this.price);
         formData.append('contents', this.contents);
@@ -194,6 +216,7 @@
         document.getElementById('file').click()
       },
       previewImage(event) {
+        
         console.log(event.target.files[0]);
         this.file = this.$refs.file.files[0];
 
@@ -226,6 +249,49 @@
         }
 
         reader.readAsDataURL(this.file);
+
+        let obj = {
+          data: new FormData(),
+          dataType: this.file.type,
+          file: this.file
+        }
+
+        obj.data.append('content', this.file, this.file.name)
+        this.save(obj)
+      },
+      save (obj) {
+        const getOrientedImage = require('exif-orientation-image')
+        let blob = null
+        return new Promise((resolve, reject) => {
+          getOrientedImage(obj.file, function (err, canvas) {
+            if (!err) {
+              if (canvas.getContext){
+                var ctx = canvas.getContext('2d');
+                var imgData=ctx.getImageData(0,0,canvas.width,canvas.height);
+                var data=imgData.data;
+                for(var i=0;i<data.length;i+=4){
+                    if(data[i+3]<255){
+                        data[i]=255;
+                        data[i+1]=255;
+                        data[i+2]=255;
+                        data[i+3]=255;
+                    }
+                }
+                ctx.putImageData(imgData,0,0);
+              }
+              canvas.toBlob(function (blob) {
+                  resolve(blob)
+              }, obj.file.type, 0.92)
+            }
+            if (err) {
+              reject()
+            }
+          })
+        }).then((orientedImageBlob) => {
+          blob = orientedImageBlob
+          this.menuImage = URL.createObjectURL(blob)
+          this.rotatedFile = new File([blob], this.file.name, { type: blob.type })
+        })
       },
       checkFileSize() {
         var maxSize  = 5 * 1024 * 1024 // 5MB
@@ -249,28 +315,10 @@
         }
       },
       checkUserId(menuUserId){
-        if(menuUserId !== this.userId || menuUserId !== 'admin') this.$router.go(-1)
+        if(this.userId !== 'admin' && this.userId !== menuUserId) {
+          this.$router.go(-1)
+        }
       }
-    },
-    watch:{
-      startDate(){
-        this.getEndDate();
-      },
-      menuType(){
-        this.getEndDate();
-      }
-    },
-    components:{
-      HeaderBar
-    },
-    computed:{
-    ...mapGetters({
-        userId : 'getUserId',
-        token : 'getToken'
-      })
-    },
-    filters: {
-      menuTypeFilter: codeFilter.menuType
     }
   };
 </script>
@@ -516,18 +564,5 @@
       font-size: 22px;
       color: white;
   }
-  // [type="radio"]:not(:checked) + label:after {
-  //     opacity: 0;
-  //     -webkit-transform: scale(0);
-  //     transform: scale(0);
-  // }
-  // [type="radio"]:checked + label:after {
-  //     opacity: 1;
-  //     -webkit-transform: scale(1);
-  //     transform: scale(1);
-  // }
-
-// radio custom : end
-
 }
 </style>
