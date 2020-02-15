@@ -77,7 +77,7 @@
         .then((response) => {
           switch(response.data.errCode) {
             case 200:
-              this.$router.replace({ name: 'RestaurantList' }) 
+              this.$router.replace({ name: 'MenuList' }) 
               break;
             case 500:
               console.log('server err : ', response)
@@ -182,7 +182,6 @@
         }
       },
        checkMaxLength(object){
-         console.log('object', object.value)
         if (object.value.length > object.maxLength){
             object.value = object.value.slice(0, object.maxLength);
         }    
