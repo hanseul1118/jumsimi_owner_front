@@ -62,11 +62,13 @@
     <div class="menu-update-bar"> 
       <input class="menu-update-put" type="submit" value="메뉴수정" @click="setMenu">
     </div>
+    <LoadingBar :loading="loading"></LoadingBar>
   </div>
 </template>
 
 <script>
   import HeaderBar from "@/components/headerBar"
+  import LoadingBar from "../components/loadingBar"
   import codeFilter from '../js/codeFilter.js'
   import AutoRotate from "@/components/AutoRotate"
   import { mapGetters } from 'vuex'
@@ -87,6 +89,7 @@
         price: 0,
         menuImage: 'https://live.staticflickr.com/65535/48580618611_2dab0d71f5_o.jpg',
         file: undefined,
+        loading: false,
         rotatedFile: undefined
       };
     },
@@ -158,21 +161,31 @@
         formData.append('startDate', this.startDate);
         formData.append('endDate', this.endDate);
 
+
+        this.loading = true //로딩바 활성화
         this.$api.menuUpdate(formData, this.token)
+
         .then(response => {
           switch(response.data.errCode) {
             case 200: 
               this.$router.replace({ name : "MenuDetail" , params: { menuId : this.menuId } })
+              this.loading = false // 로딩바 비활성화
               break;
             case 500:
+              alert(response.data.msg)
               console.log(response.data.msg)
+              this.loading = false // 로딩바 비활성화
               break;
             default:
+              alert(response.data.msg)
               console.log(response.data)
+              this.loading = false // 로딩바 비활성화
           }
         })
         .catch(error => {
+          alert('error : ' , error)
           console.log('error : ' , error)
+          this.loading = false // 로딩바 비활성화
         })
       },
       getSaterday(date){
@@ -315,6 +328,18 @@
       checkUserId(menuUserId){
         if(this.userId !== menuUserId && this.userId !== 'admin') this.$router.go(-1)
       }
+    },
+    components:{
+      HeaderBar,
+      LoadingBar
+    },
+    computed:{
+    ...mapGetters({
+        userId : 'getUserId'
+      })
+    },
+    filters: {
+      menuTypeFilter: codeFilter.menuType
     }
   };
 </script>
