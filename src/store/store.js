@@ -27,6 +27,13 @@ export const store = new Vuex.Store({
       } else {
         return undefined
       }
+    },
+    getBeforePage: state => {
+      if (state.beforePage) {
+        return state.beforePage
+      } else {
+        return undefined
+      }
     }
   },
   // 비동기 처리로 state 값을 처리할 경우
