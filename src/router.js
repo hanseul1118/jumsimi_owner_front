@@ -68,11 +68,12 @@ router.beforeEach((to, from, next) => {
         next()
         return;
     }
-
-    if (!!store.state.userInfo && !!store.state.userInfo.token) {
-      next()
+    console.log('store.state', store.state)
+    if (!!store.state.userInfo || !!store.state.userInfo.token) {
+        next()
     } else {
-      next({ name: "Login", params: to.params })
+        next({ name: "Login", params: to.params })
+        console.log('before routing, token is undefined')
     }
 })
 
