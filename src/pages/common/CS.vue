@@ -19,7 +19,7 @@
     export default {
         data(){
             return{
-                email:'cs@jumsimi.xyz',
+                email:'cs@pickapick.io',
                 phone: '010-9936-7110'
             }
         },
