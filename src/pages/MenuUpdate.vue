@@ -76,6 +76,8 @@
   export default {
     created() {
       this.menuId = this.$route.params.menuId
+      
+      this.checkToken()
       this.getMenuDetail(this.menuId)
     },
     data() {
@@ -116,23 +118,40 @@
       menuTypeFilter: codeFilter.menuType
     },
     methods: {
+      checkToken(){
+        /*eslint no-extra-boolean-cast: "off"*/
+        if(!!this.checkToken){
+          alert('로그인 해주세요  ͡~ ͜ʖ ͡° ')
+          this.$router.replace({ name : "MenuList" })
+        }
+      },
       getMenuDetail(menuId) {
 
           let params = { menuId : menuId }
           
           this.$api.menuDetail(params, this.token)
           .then(response => {
-            if(response.data.errCode == 200) {
-
-              this.checkUserId(response.data.userId)
-              this.price = response.data.price
-              this.menuImage = response.data.menuImage
-              this.contents = response.data.contents
-              this.menuType = response.data.menuType
-              this.startDate = response.data.startDate
-              this.endDate= response.data.endDate
-              this.restaurantId = response.data.restaurantId
-
+            switch(response.data.errCode) {
+              case 200: {
+                this.checkUserId(response.data.userId)
+                this.mapResult(response.data)
+                break;
+              }
+              case 400: {
+                alert(response.data.msg)
+                this.$router.go(-1)
+                break;
+              }
+              case 401: {
+                alert('로그인 해주세요  ͡~ ͜ʖ ͡° ')
+                this.$router.replace({name: 'Login'})
+                break;
+              }
+              default: {
+                alert('server error: ', response.data.msg)
+                this.$router.go(-1)
+                break;
+              }
             }
           })
           .catch(error => {
@@ -328,6 +347,15 @@
       },
       checkUserId(menuUserId){
         if(this.userId !== menuUserId && this.userId !== 'admin') this.$router.go(-1)
+      },
+      mapResult(result){
+        this.price        = result.price
+        this.menuImage    = result.menuImage
+        this.contents     = result.contents
+        this.menuType     = result.menuType
+        this.startDate    = result.startDate
+        this.endDate      = result.endDate
+        this.restaurantId = result.restaurantId
       }
     }
   };

@@ -201,6 +201,11 @@ export default {
             this.$router.go(-1)
             break;
           }
+          case 401: {
+            alert('로그인 해주세요  ͡~ ͜ʖ ͡° ')
+            this.$router.replace({name: 'Login'})
+            break;
+          }
           default: {
             alert('server error: ', response.data.msg)
             this.$router.go(-1)
