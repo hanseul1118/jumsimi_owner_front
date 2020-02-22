@@ -33,6 +33,7 @@
 <script>
     import HeaderBar from '../components/headerBar'
     import codeFilter from '../js/codeFilter.js'
+    import { mapGetters } from 'vuex'
 
     export default {
         created() {
@@ -63,10 +64,6 @@
                     geoX: 0,
                     geoY: 0
                   }
-                ],
-                headerList : [
-                  { menuName : '식당등록', pathName: 'RestaurantCreate' },
-                  { menuName : '고객센터', pathName: 'CS' }
                 ],
                 pageCnt : 10,
                 pageNumber: 0,
@@ -223,7 +220,21 @@
                 } else {
                     return '알수없음'
                 }
-            }
+            },
+            headerList(){
+                let headerArray = [
+                    { menuName : '고객센터', pathName: 'CS' }
+                ]
+
+                if(this.userId === 'admin') {
+                    headerArray.unshift({ menuName : '식당등록', pathName: 'RestaurantCreate' })
+                }
+
+                return headerArray
+            },
+            ...mapGetters({
+                userId : 'getUserId'
+            }),
         }
     }
 </script>
