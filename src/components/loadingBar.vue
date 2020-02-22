@@ -43,13 +43,13 @@
       handleResize() {
         this.maskWidth = window.innerWidth;
         this.maskHeight = window.innerHeight;
-        console.log("어플리케이션 width : " , this.maskWidth)
-        console.log("어플리케이션 height : " , this.maskHeight)
+        // console.log("어플리케이션 width : " , this.maskWidth)
+        // console.log("어플리케이션 height : " , this.maskHeight)
       },
       loadingMask() {
         this.appHeight = document.getElementById('app').scrollHeight;
-        console.log("로딩마스크 height : " ,this.maskHeight)
-        console.log("로딩마스크 width : ",this.appHeight)
+        // console.log("로딩마스크 height : " ,this.maskHeight)
+        // console.log("로딩마스크 width : ",this.appHeight)
         document.getElementById('mask').style.width = this.maskWidth + 'px'
         document.getElementById('mask').style.height = this.appHeight + 'px'
         document.getElementById('mask').style.opacity = '0.3'
