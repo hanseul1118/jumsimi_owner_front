@@ -32,6 +32,9 @@
   import { mapGetters } from 'vuex'
 
   export default {
+    created(){
+      this.checkToken();      
+    },
     components: {
       HeaderBar,
       LoadingBar,
@@ -65,6 +68,19 @@
       token : 'getToken'
     }),
     methods: {
+      checkToken(){
+        /*eslint no-extra-boolean-cast: "off"*/
+        if(!!this.token){
+          alert('로그인 해주세요  ͡~ ͜ʖ ͡° ')
+          this.$router.replace({name: 'Login'})         
+        }else if(this.userId !== 'admin'){
+          alert('관리자만 등록할 수 있습니다.')
+          this.$router.replace({ name : "MenuList" })
+        }else{
+          alert('관리자만 등록할 수 있습니다.')
+          this.$router.replace({ name : "MenuList" })
+        }
+      },
       createRestaurant: function() {
         let formData = new FormData();
         
@@ -85,6 +101,11 @@
             case 200:
               this.$router.replace({ name: 'MenuList' }) 
               this.loading = false // 로딩바 비활성화
+              break;
+            case 401:
+              alert('로그인 해주세요  ͡~ ͜ʖ ͡° ')
+              this.loading = false // 로딩바 비활성화
+              console.log('token undefined')
               break;
             case 500:
               alert('server err : ', response)
