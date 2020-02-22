@@ -135,9 +135,7 @@ export default {
 
         return resArray
       } else {
-        return [
-          "https://picsum.photos/1024/480/?image=12"
-        ]
+        return ["https://picsum.photos/1024/480/?image=12"]
       }
     },
     menuString: function() {
