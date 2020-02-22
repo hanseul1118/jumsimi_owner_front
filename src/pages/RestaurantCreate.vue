@@ -1,6 +1,6 @@
 <template>
   <div class="restaurant-create-container">
-    <HeaderBar :type="0" class="header-bar"></HeaderBar>
+    <HeaderBar :type="1" class="header-bar"></HeaderBar>
     <div class="restaurant-create-flex-box">
       <div class="restaurant-create-img">
         <input id="file" type="file" ref="file" @change="previewImage" accept="image/*">
