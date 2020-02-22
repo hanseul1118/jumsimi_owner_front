@@ -120,7 +120,7 @@
     methods: {
       checkToken(){
         /*eslint no-extra-boolean-cast: "off"*/
-        if(!!this.checkToken){
+        if(!this.token){
           alert('로그인 해주세요  ͡~ ͜ʖ ͡° ')
           this.$router.replace({ name : "MenuList" })
         }

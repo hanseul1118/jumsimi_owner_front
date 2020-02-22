@@ -70,13 +70,10 @@
     methods: {
       checkToken(){
         /*eslint no-extra-boolean-cast: "off"*/
-        if(!!this.token){
+        if(!this.token){
           alert('로그인 해주세요  ͡~ ͜ʖ ͡° ')
           this.$router.replace({name: 'Login'})         
         }else if(this.userId !== 'admin'){
-          alert('관리자만 등록할 수 있습니다.')
-          this.$router.replace({ name : "MenuList" })
-        }else{
           alert('관리자만 등록할 수 있습니다.')
           this.$router.replace({ name : "MenuList" })
         }
