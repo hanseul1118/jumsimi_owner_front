@@ -76,8 +76,6 @@
   export default {
     created() {
       this.menuId = this.$route.params.menuId
-      
-      this.checkToken()
       this.getMenuDetail(this.menuId)
     },
     data() {
@@ -118,15 +116,7 @@
       menuTypeFilter: codeFilter.menuType
     },
     methods: {
-      checkToken(){
-        /*eslint no-extra-boolean-cast: "off"*/
-        if(!this.token){
-          alert('로그인 해주세요  ͡~ ͜ʖ ͡° ')
-          this.$router.replace({ name : "MenuList" })
-        }
-      },
       getMenuDetail(menuId) {
-
           let params = { menuId : menuId }
           
           this.$api.menuDetail(params, this.token)

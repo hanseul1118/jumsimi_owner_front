@@ -68,7 +68,6 @@ router.beforeEach((to, from, next) => {
         next()
         return;
     }
-    console.log('store.state', store.state)
     if (!!store.state.userInfo || !!store.state.userInfo.token) {
         next()
     } else {
