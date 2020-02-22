@@ -37,6 +37,7 @@
 
   export default {
     created() {
+      this.checkToken();      
       this.addScrollEvent();
       this.getMenuList();
       this.getGeoInfo(this);
@@ -196,7 +197,14 @@
           return `${dist.toFixed(0)}M 이내`
           }
         }
-      }
+      },
+      checkToken(){
+        /*eslint no-extra-boolean-cast: "off"*/
+        if(!this.token){
+          alert('로그인 해주세요  ͡~ ͜ʖ ͡° ')
+          this.$router.replace({name: 'Login'})         
+        }
+      },
     },
     watch:{
       bottomYN(val) {
