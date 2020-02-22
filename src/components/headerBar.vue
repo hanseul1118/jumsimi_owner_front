@@ -63,7 +63,7 @@
         }
       },
       goMenuList(){
-        this.$router.push({name: 'MenuList'})
+        if(this.$route.name !== 'MenuList') this.$router.push({name: 'MenuList'})
       },
       emitFuncion(pathName){
         if(this.passedMenuId) {
