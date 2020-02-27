@@ -63,12 +63,11 @@ const router = new Router({
     ]
 })
 router.beforeEach((to, from, next) => {
-    /*eslint no-extra-boolean-cast: "off"*/
     if(to.name == "Login"){
         next()
         return;
     }
-    if (!!store.state.userInfo || !!store.state.userInfo.token) {
+    if (!!store.state.userInfo && !!store.state.userInfo.token) {
         next()
     } else {
         next({ name: "Login", params: to.params })

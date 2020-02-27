@@ -47,7 +47,8 @@
       "eslint:recommended"
     ],
     "rules": {
-      "no-console": "off"
+      "no-console": "off",
+      "no-extra-boolean-cast": "off"
     },
     "parserOptions": {
       "parser": "babel-eslint"
