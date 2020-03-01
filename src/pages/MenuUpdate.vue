@@ -417,7 +417,7 @@
           letter-spacing: 3px;
           line-height: 33px;
           font-size : 20px; 
-          color: #666666;
+          color: #545454;
         }
       }
       .date-label{
