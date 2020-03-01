@@ -158,7 +158,7 @@ export default {
         return '알수없음'
       }
     },
-    callPhon: function(){
+    callPhone: function(){
       return 'tel:' + this.restaurantPhone
     },
     ...mapGetters({
@@ -428,7 +428,7 @@ export default {
           }
         }
         .menu-detail-bottom-info-phone-distance {
-          a:link , a:visited , a:hover {
+          a, a:link , a:visited , a:hover {
             color: #cf5252;
             text-decoration: none;
           }
