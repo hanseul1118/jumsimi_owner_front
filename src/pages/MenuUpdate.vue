@@ -417,7 +417,7 @@
           letter-spacing: 3px;
           line-height: 33px;
           font-size : 20px; 
-          color: #999;
+          color: #666666;
         }
       }
       .date-label{
@@ -565,32 +565,35 @@
       text-align: center;
       border: 1px solid #CF5252;
   }
-  [type="radio"]:checked + label:before,
-  [type="radio"]:not(:checked) + label:before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 60px;
-      height: 42px;
-      padding: 4px 0;
-      float: left;
-      border: 1px solid #CF5252;
-      color: #CF5252;
+  .v-text-field input{
+    padding: 0px !important;
   }
-  [type="radio"]:checked + label:after,
-  [type="radio"]:not(:checked) + label:after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      background: #CF5252;
-      width: 60px;
-      height: 42px;
-      float: left;
-      border: 1px solid #CF5252;
-      font-size: 22px;
-      color: white;
-  }
+  // [type="radio"]:checked + label:before,
+  // [type="radio"]:not(:checked) + label:before {
+  //     content: '';
+  //     position: absolute;
+  //     left: 0;
+  //     top: 0;
+  //     width: 60px;
+  //     height: 42px;
+  //     padding: 4px 0;
+  //     float: left;
+  //     border: 1px solid #CF5252;
+  //     color: #CF5252;
+  // }
+  // [type="radio"]:checked + label:after,
+  // [type="radio"]:not(:checked) + label:after {
+  //     content: '';
+  //     position: absolute;
+  //     top: 0;
+  //     left: 0;
+  //     background: #CF5252;
+  //     width: 60px;
+  //     height: 42px;
+  //     float: left;
+  //     border: 1px solid #CF5252;
+  //     font-size: 22px;
+  //     color: white;
+  // }
 }
 </style>
