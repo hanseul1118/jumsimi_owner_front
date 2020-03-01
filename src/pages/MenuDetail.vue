@@ -77,7 +77,6 @@ export default {
     }
     this.getMenuDetail(this.menuId)
     this.getGeoInfo(this)
-    this.callPhone = 'tel:' + this.restaurantPhone
   },
   components: {
     HeaderBar
@@ -101,7 +100,6 @@ export default {
       contents: "6,500원에 맛있는 점심 한 끼 드시고 가세요!!",
       restaurantAddress: "서울시 종로구 종로5길 14-3 파이낸스타워 B1",
       restaurantPhone: "02-2361-3345",
-      callPhone : undefined,
       isFavorite: false,
       menuId: "1",
       gpsX: 0,
@@ -172,7 +170,10 @@ export default {
       }
       
       return menuListArray
-    }
+    },
+    callPhone(){
+      return 'tel:' + this.restaurantPhone
+    },
   },
   methods: {
     changeFavoriteState: function() {
